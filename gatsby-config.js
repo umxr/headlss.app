@@ -1,8 +1,9 @@
 module.exports = {
   siteMetadata: {
+    siteUrl: 'https://store.gatsbyjs.org',
     title: `Headlss`,
     description: `Future of Headless Commerce`,
-    author: `@gatsbyjs`,
+    author: `@Statement`,
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
@@ -16,6 +17,13 @@ module.exports = {
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
     `gatsby-plugin-sass`,
+    {
+      resolve: "gatsby-source-shopify",
+      options: {
+        shopName: "headlss",
+        accessToken: "2f0365554792e450a365f05918feb654",
+      },
+    },
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
