@@ -4,6 +4,6 @@
  * See: https://www.gatsbyjs.org/docs/browser-apis/
  */
 
-import wrapWithProvider from "./src/utils/wrapReduxProvider";
+import wrapReduxProvider from "./src/utils/wrapReduxProvider";
 
-export const wrapRootElement = wrapWithProvider;
+export const wrapRootElement = wrapReduxProvider;

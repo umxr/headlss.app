@@ -1,14 +1,21 @@
-import { Link } from "gatsby";
+import { graphql, Link, useStaticQuery } from "gatsby";
 import React from "react";
 
-interface Props {
-  siteTitle: string;
-}
-
-const Header = ({ siteTitle }: Props) => (
-  <header>
-    <Link to="/">{siteTitle}</Link>
-  </header>
-);
+const Header = () => {
+  const data = useStaticQuery(graphql`
+    query SiteTitleQuery {
+      site {
+        siteMetadata {
+          title
+        }
+      }
+    }
+  `);
+  return (
+    <header>
+      <Link to="/">{data.site.siteMetadata.title}</Link>
+    </header>
+  );
+};
 
 export default Header;

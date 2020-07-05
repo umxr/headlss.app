@@ -2,6 +2,7 @@ import React from "react";
 import { Helmet } from "react-helmet";
 import { graphql } from "gatsby";
 import { QueryImageSharpArgs, ShopifyProduct, Site } from "../graphqlTypes";
+import Layout from "../modules/Layout";
 
 interface ChildImageSharp {
   childImageSharp: QueryImageSharpArgs;
@@ -36,7 +37,7 @@ const Product = (props: Props) => {
     : placeholderImage.childImageSharp.fluid?.src;
 
   return (
-    <>
+    <Layout>
       <Helmet>
         <title>{title}</title>
         <meta name="description" content={description} />
@@ -62,7 +63,7 @@ const Product = (props: Props) => {
           <code>{JSON.stringify(product, null, 2)}</code>
         </pre>
       </div>
-    </>
+    </Layout>
   );
 };
 
@@ -85,6 +86,7 @@ export const query = graphql`
       }
     }
     shopifyProduct(handle: { eq: $handle }) {
+      shopifyId
       id
       title
       handle
