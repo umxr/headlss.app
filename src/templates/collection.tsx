@@ -1,7 +1,7 @@
 import React from "react";
-import { Helmet } from "react-helmet";
 import { graphql } from "gatsby";
-import { QueryImageSharpArgs, ShopifyProduct, Site } from "../graphqlTypes";
+import { Helmet } from "react-helmet";
+import { QueryImageSharpArgs, ShopifyCollection, Site } from "../graphqlTypes";
 
 interface ChildImageSharp {
   childImageSharp: QueryImageSharpArgs;
@@ -10,29 +10,29 @@ interface ChildImageSharp {
 interface Props {
   data: {
     site: Site;
-    shopifyProduct: ShopifyProduct;
+    shopifyCollection: ShopifyCollection;
     placeholderImage: ChildImageSharp;
   };
   location: Location;
 }
 
-const Product = (props: Props) => {
+const Collection = (props: Props) => {
   const {
-    data: { site, shopifyProduct: product, placeholderImage },
+    data: { site, shopifyCollection: collection, placeholderImage },
     location: { pathname },
   } = props;
 
   const canonical = `${site.siteMetadata?.siteUrl}${pathname}`;
-  const title = product.title ? product.title : "Shopify Product Title";
-  const description = product.description
-    ? product.description
+  const title = collection.title ? collection.title : "Shopify Product Title";
+  const description = collection.description
+    ? collection.description
     : "Shopify Product Description";
-  const handle = product.handle;
+  const handle = collection.handle;
 
   // TODO: Create a better way to handle deeply nested property checking
   // @ts-ignore
-  const image = product.images[0].localFile.url
-    ? product.images[0].localFile.url
+  const image = collection.image.localFile.url
+    ? collection.image.localFile.url
     : placeholderImage.childImageSharp.fluid?.src;
 
   return (
@@ -59,17 +59,17 @@ const Product = (props: Props) => {
       </Helmet>
       <div>
         <pre>
-          <code>{JSON.stringify(product, null, 2)}</code>
+          <code>{JSON.stringify(collection, null, 2)}</code>
         </pre>
       </div>
     </>
   );
 };
 
-export default Product;
+export default Collection;
 
 export const query = graphql`
-  query ProductQuery($handle: String!) {
+  query CollectionQuery($handle: String!) {
     site {
       siteMetadata {
         siteUrl
@@ -84,32 +84,26 @@ export const query = graphql`
         }
       }
     }
-    shopifyProduct(handle: { eq: $handle }) {
-      id
-      title
+    shopifyCollection(handle: { eq: $handle }) {
       handle
       description
-      productType
-      tags
-      priceRange {
-        minVariantPrice {
-          amount
-          currencyCode
-        }
-        maxVariantPrice {
-          amount
-          currencyCode
-        }
-      }
-      variants {
-        shopifyId
+      title
+      products {
         title
-        price
-        availableForSale
+        description
+        priceRange {
+          minVariantPrice {
+            amount
+            currencyCode
+          }
+          maxVariantPrice {
+            amount
+            currencyCode
+          }
+        }
       }
-      images {
+      image {
         id
-        altText
         localFile {
           url
           childImageSharp {
