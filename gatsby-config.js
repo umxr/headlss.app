@@ -1,6 +1,6 @@
 module.exports = {
   siteMetadata: {
-    siteUrl: 'https://store.gatsbyjs.org',
+    siteUrl: "https://store.gatsbyjs.org",
     title: `Headlss`,
     description: `Future of Headless Commerce`,
     author: `@Statement`,
@@ -39,5 +39,14 @@ module.exports = {
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     `gatsby-plugin-offline`,
+    {
+      resolve: "gatsby-plugin-webpack-bundle-analyzer",
+      options: {
+        production: true,
+        disable: !process.env.ANALYZE_BUNDLE_SIZE,
+        generateStatsFile: true,
+        analyzerMode: "static",
+      },
+    },
   ],
 };
