@@ -48,7 +48,7 @@ const Product = (props: Props) => {
         />
         <meta property="og:locale" content="en" />
         <meta property="og:title" content={title} />
-        <meta property="og:site_name" content="Gatsby Swag Store" />
+        <meta property="og:site_name" content="Headlss" />
         <meta property="og:description" content={description} />
         // @ts-ignore This can be removed once "TODO" Above is fixed
         <meta property="og:image" content={image} />

@@ -4353,6 +4353,70 @@ export type PagesQueryQuery = (
   ) }
 );
 
+export type CollectionsQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CollectionsQueryQuery = (
+  { __typename?: 'Query' }
+  & { site?: Maybe<(
+    { __typename?: 'Site' }
+    & { siteMetadata?: Maybe<(
+      { __typename?: 'SiteSiteMetadata' }
+      & Pick<SiteSiteMetadata, 'siteUrl' | 'title' | 'description'>
+    )> }
+  )>, placeholderImage?: Maybe<(
+    { __typename?: 'File' }
+    & { childImageSharp?: Maybe<(
+      { __typename?: 'ImageSharp' }
+      & { fluid?: Maybe<(
+        { __typename?: 'ImageSharpFluid' }
+        & GatsbyImageSharpFluidFragment
+      )> }
+    )> }
+  )>, allShopifyCollection: (
+    { __typename?: 'ShopifyCollectionConnection' }
+    & { edges: Array<(
+      { __typename?: 'ShopifyCollectionEdge' }
+      & { node: (
+        { __typename?: 'ShopifyCollection' }
+        & Pick<ShopifyCollection, 'title' | 'handle' | 'id'>
+      ) }
+    )> }
+  ) }
+);
+
+export type ProductsQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ProductsQueryQuery = (
+  { __typename?: 'Query' }
+  & { site?: Maybe<(
+    { __typename?: 'Site' }
+    & { siteMetadata?: Maybe<(
+      { __typename?: 'SiteSiteMetadata' }
+      & Pick<SiteSiteMetadata, 'siteUrl' | 'title' | 'description'>
+    )> }
+  )>, placeholderImage?: Maybe<(
+    { __typename?: 'File' }
+    & { childImageSharp?: Maybe<(
+      { __typename?: 'ImageSharp' }
+      & { fluid?: Maybe<(
+        { __typename?: 'ImageSharpFluid' }
+        & GatsbyImageSharpFluidFragment
+      )> }
+    )> }
+  )>, allShopifyCollection: (
+    { __typename?: 'ShopifyCollectionConnection' }
+    & { edges: Array<(
+      { __typename?: 'ShopifyCollectionEdge' }
+      & { node: (
+        { __typename?: 'ShopifyCollection' }
+        & Pick<ShopifyCollection, 'title' | 'handle' | 'id'>
+      ) }
+    )> }
+  ) }
+);
+
 export type CollectionQueryQueryVariables = Exact<{
   handle: Scalars['String'];
 }>;
@@ -4433,7 +4497,7 @@ export type ProductQueryQuery = (
     )> }
   )>, shopifyProduct?: Maybe<(
     { __typename?: 'ShopifyProduct' }
-    & Pick<ShopifyProduct, 'id' | 'title' | 'handle' | 'description' | 'productType' | 'tags'>
+    & Pick<ShopifyProduct, 'shopifyId' | 'id' | 'title' | 'handle' | 'description' | 'productType' | 'tags'>
     & { priceRange?: Maybe<(
       { __typename?: 'ShopifyProductPriceRange' }
       & { minVariantPrice?: Maybe<(
