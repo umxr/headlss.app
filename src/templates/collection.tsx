@@ -1,7 +1,14 @@
 import React from "react";
-import { graphql } from "gatsby";
+import { graphql, Link } from "gatsby";
 import { Helmet } from "react-helmet";
-import { QueryImageSharpArgs, ShopifyCollection, Site } from "../graphqlTypes";
+import {
+  Maybe,
+  QueryImageSharpArgs,
+  ShopifyCollection,
+  ShopifyProduct,
+  Site,
+} from "../graphqlTypes";
+import Layout from "../modules/Layout";
 
 interface ChildImageSharp {
   childImageSharp: QueryImageSharpArgs;
@@ -35,8 +42,36 @@ const Collection = (props: Props) => {
     ? collection.image.localFile.url
     : placeholderImage.childImageSharp.fluid?.src;
 
+  if (!collection.products) {
+    return (
+      <Layout>
+        <Helmet>
+          <title>{title}</title>
+          <meta name="description" content={description} />
+          <link rel="canonical" href={canonical} />
+          <meta
+            property="og:url"
+            content={`${site.siteMetadata?.siteUrl}/product/${handle}`}
+          />
+          <meta property="og:locale" content="en" />
+          <meta property="og:title" content={title} />
+          <meta property="og:site_name" content="Headlss" />
+          <meta property="og:description" content={description} />
+          // @ts-ignore This can be removed once "TODO" Above is fixed
+          <meta property="og:image" content={image} />
+          <meta property="og:image:alt" content={title} />
+          <meta property="og:image:width" content="600" />
+          <meta property="og:image:height" content="600" />
+          <meta name="twitter:card" content="summary" />
+          <meta name="twitter:site" content="@Statement" />
+        </Helmet>
+        <div>Empty Collection</div>
+      </Layout>
+    );
+  }
+
   return (
-    <>
+    <Layout>
       <Helmet>
         <title>{title}</title>
         <meta name="description" content={description} />
@@ -57,12 +92,17 @@ const Collection = (props: Props) => {
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:site" content="@Statement" />
       </Helmet>
-      <div>
-        <pre>
-          <code>{JSON.stringify(collection, null, 2)}</code>
-        </pre>
-      </div>
-    </>
+      <ul>
+        {collection.products.map((product: Maybe<ShopifyProduct>) => {
+          if (!product) return null;
+          return (
+            <li key={product.id}>
+              <Link to={`/products/${product.handle}`}>{product.title}</Link>
+            </li>
+          );
+        })}
+      </ul>
+    </Layout>
   );
 };
 
@@ -89,6 +129,8 @@ export const query = graphql`
       description
       title
       products {
+        id
+        handle
         title
         description
         priceRange {

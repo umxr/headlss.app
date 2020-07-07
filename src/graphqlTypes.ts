@@ -4444,7 +4444,7 @@ export type CollectionQueryQuery = (
     & Pick<ShopifyCollection, 'handle' | 'description' | 'title'>
     & { products?: Maybe<Array<Maybe<(
       { __typename?: 'ShopifyProduct' }
-      & Pick<ShopifyProduct, 'title' | 'description'>
+      & Pick<ShopifyProduct, 'id' | 'handle' | 'title' | 'description'>
       & { priceRange?: Maybe<(
         { __typename?: 'ShopifyProductPriceRange' }
         & { minVariantPrice?: Maybe<(
