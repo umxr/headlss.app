@@ -3812,6 +3812,10 @@ export enum SitePageFieldsEnum {
   PluginCreatorPluginOptionsThemeColorInHead = 'pluginCreator___pluginOptions___theme_color_in_head',
   PluginCreatorPluginOptionsCacheDigest = 'pluginCreator___pluginOptions___cacheDigest',
   PluginCreatorPluginOptionsPathCheck = 'pluginCreator___pluginOptions___pathCheck',
+  PluginCreatorPluginOptionsProduction = 'pluginCreator___pluginOptions___production',
+  PluginCreatorPluginOptionsDisable = 'pluginCreator___pluginOptions___disable',
+  PluginCreatorPluginOptionsGenerateStatsFile = 'pluginCreator___pluginOptions___generateStatsFile',
+  PluginCreatorPluginOptionsAnalyzerMode = 'pluginCreator___pluginOptions___analyzerMode',
   PluginCreatorNodeApIs = 'pluginCreator___nodeAPIs',
   PluginCreatorBrowserApIs = 'pluginCreator___browserAPIs',
   PluginCreatorSsrApIs = 'pluginCreator___ssrAPIs',
@@ -3820,6 +3824,7 @@ export enum SitePageFieldsEnum {
   PluginCreatorPackageJsonDescription = 'pluginCreator___packageJson___description',
   PluginCreatorPackageJsonVersion = 'pluginCreator___packageJson___version',
   PluginCreatorPackageJsonMain = 'pluginCreator___packageJson___main',
+  PluginCreatorPackageJsonAuthor = 'pluginCreator___packageJson___author',
   PluginCreatorPackageJsonLicense = 'pluginCreator___packageJson___license',
   PluginCreatorPackageJsonDependencies = 'pluginCreator___packageJson___dependencies',
   PluginCreatorPackageJsonDependenciesName = 'pluginCreator___packageJson___dependencies___name',
@@ -4019,6 +4024,10 @@ export enum SitePluginFieldsEnum {
   PluginOptionsThemeColorInHead = 'pluginOptions___theme_color_in_head',
   PluginOptionsCacheDigest = 'pluginOptions___cacheDigest',
   PluginOptionsPathCheck = 'pluginOptions___pathCheck',
+  PluginOptionsProduction = 'pluginOptions___production',
+  PluginOptionsDisable = 'pluginOptions___disable',
+  PluginOptionsGenerateStatsFile = 'pluginOptions___generateStatsFile',
+  PluginOptionsAnalyzerMode = 'pluginOptions___analyzerMode',
   NodeApIs = 'nodeAPIs',
   BrowserApIs = 'browserAPIs',
   SsrApIs = 'ssrAPIs',
@@ -4027,6 +4036,7 @@ export enum SitePluginFieldsEnum {
   PackageJsonDescription = 'packageJson___description',
   PackageJsonVersion = 'packageJson___version',
   PackageJsonMain = 'packageJson___main',
+  PackageJsonAuthor = 'packageJson___author',
   PackageJsonLicense = 'packageJson___license',
   PackageJsonDependencies = 'packageJson___dependencies',
   PackageJsonDependenciesName = 'packageJson___dependencies___name',
@@ -4072,6 +4082,7 @@ export type SitePluginPackageJson = {
   description?: Maybe<Scalars['String']>;
   version?: Maybe<Scalars['String']>;
   main?: Maybe<Scalars['String']>;
+  author?: Maybe<Scalars['String']>;
   license?: Maybe<Scalars['String']>;
   dependencies?: Maybe<Array<Maybe<SitePluginPackageJsonDependencies>>>;
   devDependencies?: Maybe<Array<Maybe<SitePluginPackageJsonDevDependencies>>>;
@@ -4114,6 +4125,7 @@ export type SitePluginPackageJsonFilterInput = {
   description?: Maybe<StringQueryOperatorInput>;
   version?: Maybe<StringQueryOperatorInput>;
   main?: Maybe<StringQueryOperatorInput>;
+  author?: Maybe<StringQueryOperatorInput>;
   license?: Maybe<StringQueryOperatorInput>;
   dependencies?: Maybe<SitePluginPackageJsonDependenciesFilterListInput>;
   devDependencies?: Maybe<SitePluginPackageJsonDevDependenciesFilterListInput>;
@@ -4154,6 +4166,10 @@ export type SitePluginPluginOptions = {
   theme_color_in_head?: Maybe<Scalars['Boolean']>;
   cacheDigest?: Maybe<Scalars['String']>;
   pathCheck?: Maybe<Scalars['Boolean']>;
+  production?: Maybe<Scalars['Boolean']>;
+  disable?: Maybe<Scalars['Boolean']>;
+  generateStatsFile?: Maybe<Scalars['Boolean']>;
+  analyzerMode?: Maybe<Scalars['String']>;
 };
 
 export type SitePluginPluginOptionsFilterInput = {
@@ -4173,6 +4189,10 @@ export type SitePluginPluginOptionsFilterInput = {
   theme_color_in_head?: Maybe<BooleanQueryOperatorInput>;
   cacheDigest?: Maybe<StringQueryOperatorInput>;
   pathCheck?: Maybe<BooleanQueryOperatorInput>;
+  production?: Maybe<BooleanQueryOperatorInput>;
+  disable?: Maybe<BooleanQueryOperatorInput>;
+  generateStatsFile?: Maybe<BooleanQueryOperatorInput>;
+  analyzerMode?: Maybe<StringQueryOperatorInput>;
 };
 
 export type SitePluginSortInput = {
@@ -4510,6 +4530,10 @@ export type ProductQueryQuery = (
     )>, variants?: Maybe<Array<Maybe<(
       { __typename?: 'ShopifyProductVariant' }
       & Pick<ShopifyProductVariant, 'shopifyId' | 'title' | 'price' | 'availableForSale'>
+      & { selectedOptions?: Maybe<Array<Maybe<(
+        { __typename?: 'ShopifyProductVariantSelectedOptions' }
+        & Pick<ShopifyProductVariantSelectedOptions, 'name' | 'value'>
+      )>>> }
     )>>>, images?: Maybe<Array<Maybe<(
       { __typename?: 'ShopifyProductImages' }
       & Pick<ShopifyProductImages, 'id' | 'altText'>

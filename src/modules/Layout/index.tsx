@@ -7,12 +7,13 @@ import {
   StoreContext,
   defaultStoreContext,
 } from "../../config/context/createStoreContext";
+import { Client } from "shopify-buy";
 
 class Layout extends Component {
   state = {
     store: {
       ...defaultStoreContext,
-      addVariantToCart: (variantId, quantity) => {
+      addVariantToCart: (variantId: string, quantity: number) => {
         if (variantId === "" || !quantity) {
           console.error("Both a size and quantity are required.");
           return;
@@ -28,7 +29,7 @@ class Layout extends Component {
         const { checkout, client } = this.state.store;
         const checkoutId = checkout.id;
         const lineItemsToUpdate = [
-          { variantId, quantity: parseInt(quantity, 10) },
+          { variantId, quantity: parseInt(String(quantity), 10) },
         ];
 
         return client.checkout
@@ -43,7 +44,11 @@ class Layout extends Component {
             }));
           });
       },
-      removeLineItem: (client, checkoutID, lineItemID) => {
+      removeLineItem: (
+        client: Client,
+        checkoutID: string,
+        lineItemID: string
+      ) => {
         return client.checkout
           .removeLineItems(checkoutID, [lineItemID])
           .then((res) => {
@@ -55,9 +60,14 @@ class Layout extends Component {
             }));
           });
       },
-      updateLineItem: (client, checkoutID, lineItemID, quantity) => {
+      updateLineItem: (
+        client: Client,
+        checkoutID: string,
+        lineItemID: string,
+        quantity: number
+      ) => {
         const lineItemsToUpdate = [
-          { id: lineItemID, quantity: parseInt(quantity, 10) },
+          { id: lineItemID, quantity: parseInt(String(quantity), 10) },
         ];
 
         return client.checkout
@@ -95,7 +105,8 @@ class Layout extends Component {
     };
 
     const createNewCheckout = () => this.state.store.client.checkout.create();
-    const fetchCheckout = (id) => this.state.store.client.checkout.fetch(id);
+    const fetchCheckout = (id: string) =>
+      this.state.store.client.checkout.fetch(id);
 
     if (existingCheckoutID && existingCheckoutID !== "null") {
       try {
