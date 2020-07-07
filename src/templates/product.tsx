@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet";
 import { graphql } from "gatsby";
 import { QueryImageSharpArgs, ShopifyProduct, Site } from "../graphqlTypes";
 import Layout from "../modules/Layout";
+import ProductForm from "../components/pages/Product/ProductForm";
 
 interface ChildImageSharp {
   childImageSharp: QueryImageSharpArgs;
@@ -58,11 +59,7 @@ const Product = (props: Props) => {
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:site" content="@Statement" />
       </Helmet>
-      <div>
-        <pre>
-          <code>{JSON.stringify(product, null, 2)}</code>
-        </pre>
-      </div>
+      <ProductForm id={product.id} variants={product.variants} />
     </Layout>
   );
 };

@@ -31,8 +31,6 @@ class Layout extends Component {
           { variantId, quantity: parseInt(quantity, 10) },
         ];
 
-        console.log(lineItemsToUpdate);
-
         return client.checkout
           .addLineItems(checkoutId, lineItemsToUpdate)
           .then((checkout) => {
