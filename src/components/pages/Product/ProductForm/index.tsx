@@ -1,4 +1,4 @@
-import React, { Component, FormEvent } from "react";
+import React, { ChangeEvent, Component, FormEvent } from "react";
 import { Maybe, ShopifyProductVariant } from "../../../../graphqlTypes";
 import { StoreContext } from "../../../../config/context/createStoreContext";
 
@@ -37,7 +37,7 @@ class ProductForm extends Component<Props, State> {
     }
   }
 
-  handleChange = (event: React.FormEvent<HTMLInputElement>) => {
+  handleChange = (event: React.ChangeEvent) => {
     event.preventDefault();
 
     if (event.currentTarget.value) {
@@ -91,21 +91,26 @@ class ProductForm extends Component<Props, State> {
   render() {
     const { variants } = this.props;
     const { errors } = this.state;
+
+    const hasVariants = variants && variants.length > 1;
+
+    const isOutOfStock = !hasVariants && !variants[0].availableForSale;
+
     return (
       <StoreContext.Consumer>
         {({ addVariantToCart }) => {
           return (
             <form onSubmit={this.handleSubmit(addVariantToCart)} noValidate>
-              {errors.length && (
-                <ul>
-                  {errors.map((error: Error) => (
-                    <li
-                      key={error.field}
-                      dangerouslySetInnerHTML={{ __html: error.message }}
-                    />
-                  ))}
-                </ul>
-              )}
+              {/*{errors.length && (*/}
+              {/*  <ul>*/}
+              {/*    {errors.map((error: Error) => (*/}
+              {/*      <li*/}
+              {/*        key={error.field}*/}
+              {/*        dangerouslySetInnerHTML={{ __html: error.message }}*/}
+              {/*      />*/}
+              {/*    ))}*/}
+              {/*  </ul>*/}
+              {/*)}*/}
 
               <label htmlFor="quantity">Qty.</label>
               <input
@@ -118,7 +123,37 @@ class ProductForm extends Component<Props, State> {
                 onChange={this.handleChange}
                 value={this.state.quantity}
               />
-              <button type="submit">Add to cart</button>
+              {hasVariants && (
+                <div>
+                  <label htmlFor="variant">Size</label>
+                  <select
+                    id="variant"
+                    value={this.state.variant}
+                    name="variant"
+                    onChange={this.handleChange}
+                  >
+                    <option disabled value="">
+                      Choose Size
+                    </option>
+                    {variants &&
+                      variants.map((variant) => {
+                        if (!variant) return null;
+                        return (
+                          <option
+                            disabled={!variant.availableForSale}
+                            value={variant.shopifyId}
+                            key={variant.shopifyId}
+                          >
+                            {variant.title}
+                          </option>
+                        );
+                      })}
+                  </select>
+                </div>
+              )}
+              <button type="submit" disabled={isOutOfStock}>
+                {isOutOfStock ? "Out of Stock" : "Add to Cart"}
+              </button>
             </form>
           );
         }}

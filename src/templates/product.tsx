@@ -105,6 +105,10 @@ export const query = graphql`
         title
         price
         availableForSale
+        selectedOptions {
+          name
+          value
+        }
       }
       images {
         id
