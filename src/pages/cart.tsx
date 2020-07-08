@@ -37,10 +37,6 @@ class Cart extends Component<{}, State> {
               setCartLoading(false);
             };
 
-            const itemsInCart = checkout.lineItems.reduce(
-              (total, item) => total + item.quantity,
-              0
-            );
             return (
               <CartLineItems
                 items={checkout.lineItems}
