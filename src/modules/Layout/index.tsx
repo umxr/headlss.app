@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { ChakraProvider, CSSReset } from "@chakra-ui/core";
 
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
@@ -8,7 +9,9 @@ import {
   defaultStoreContext,
 } from "../../config/context/createStoreContext";
 import { Client } from "shopify-buy";
-import CustomerProvider from "../../config/context/createCustomerProvider";
+import CustomerProvider from "../../config/providers/createCustomerProvider";
+
+import theme from "../../theme";
 
 class Layout extends Component {
   state = {
@@ -135,13 +138,16 @@ class Layout extends Component {
   render() {
     const { children } = this.props;
     return (
-      <StoreContext.Provider value={this.state.store}>
-        <CustomerProvider>
-          <Header />
-          <main>{children}</main>
-          <Footer />
-        </CustomerProvider>
-      </StoreContext.Provider>
+      <ChakraProvider theme={theme}>
+        <CSSReset />
+        <StoreContext.Provider value={this.state.store}>
+          <CustomerProvider>
+            <Header />
+            <main>{children}</main>
+            <Footer />
+          </CustomerProvider>
+        </StoreContext.Provider>
+      </ChakraProvider>
     );
   }
 }

@@ -10,7 +10,7 @@ const templates = {
   ShopifyProduct: path.resolve("./src/templates/product.tsx"),
   ShopifyCollection: path.resolve("./src/templates/collection.tsx"),
   Dashboard: path.resolve("./src/templates/account/dashboard.tsx"),
-  Login: path.resolve("./src/templates/account/login.tsx"),
+  Login: path.resolve("./src/templates/account/Login/index.tsx"),
   Register: path.resolve("./src/templates/account/register.tsx"),
   ForgotPassword: path.resolve("./src/templates/account/forgotPassword.tsx"),
   ResetPassword: path.resolve("./src/templates/account/resetPassword.tsx"),
