@@ -8,6 +8,7 @@ import {
   defaultStoreContext,
 } from "../../config/context/createStoreContext";
 import { Client } from "shopify-buy";
+import CustomerProvider from "../../config/context/createCustomerProvider";
 
 class Layout extends Component {
   state = {
@@ -135,9 +136,11 @@ class Layout extends Component {
     const { children } = this.props;
     return (
       <StoreContext.Provider value={this.state.store}>
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <CustomerProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </CustomerProvider>
       </StoreContext.Provider>
     );
   }

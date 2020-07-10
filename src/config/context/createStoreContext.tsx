@@ -1,5 +1,5 @@
 import React from "react";
-import Client, { Client as ClientType } from "shopify-buy";
+import Client  from "shopify-buy";
 
 const client = Client.buildClient({
   domain: "headlss.myshopify.com",

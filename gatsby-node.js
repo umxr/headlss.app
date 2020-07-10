@@ -9,6 +9,11 @@ const path = require("path");
 const templates = {
   ShopifyProduct: path.resolve("./src/templates/product.tsx"),
   ShopifyCollection: path.resolve("./src/templates/collection.tsx"),
+  Dashboard: path.resolve("./src/templates/account/dashboard.tsx"),
+  Login: path.resolve("./src/templates/account/login.tsx"),
+  Register: path.resolve("./src/templates/account/register.tsx"),
+  ForgotPassword: path.resolve("./src/templates/account/forgotPassword.tsx"),
+  ResetPassword: path.resolve("./src/templates/account/resetPassword.tsx"),
 };
 
 exports.createPages = async ({ graphql, actions: { createPage } }) => {
@@ -55,5 +60,26 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
         handle: edge.node.handle,
       },
     });
+  });
+
+  createPage({
+    path: "/account/login",
+    component: templates["Login"],
+    context: {},
+  });
+  createPage({
+    path: "/account/register",
+    component: templates["Register"],
+    context: {},
+  });
+  createPage({
+    path: "/account/password-forgot",
+    component: templates["ForgotPassword"],
+    context: {},
+  });
+  createPage({
+    path: "/account/password-reset",
+    component: templates["ResetPassword"],
+    context: {},
   });
 };
