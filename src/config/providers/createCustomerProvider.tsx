@@ -18,8 +18,8 @@ const middlewareLink = setContext(() => ({
 
 const client = new ApolloClient({
   link: middlewareLink.concat(httpLink),
-  fetch,
   cache: new InMemoryCache(),
+  fetch,
 });
 
 interface Props {

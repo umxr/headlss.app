@@ -15,6 +15,8 @@ const Email = ({ name, label, placeholder = "Email", onChange }: Props) => {
         const error = getIn(form.errors, name);
         const touched = getIn(form.touched, name);
 
+        const isInvalid = !!error && !!touched;
+
         return (
           <div>
             <label htmlFor={name}>{label}</label>
@@ -31,6 +33,7 @@ const Email = ({ name, label, placeholder = "Email", onChange }: Props) => {
                   : field.onChange
               }
             />
+            {isInvalid && <div>{form.errors.name}</div>}
           </div>
         );
       }}

@@ -12,8 +12,10 @@ const Text = ({ name, label, placeholder = "", onChange }: Props) => {
   return (
     <Field name={name}>
       {({ field, form }: FieldProps) => {
-        const errors = getIn(form.errors, name);
+        const error = getIn(form.errors, name);
         const touched = getIn(form.touched, name);
+
+        const isInvalid = !!error && !!touched;
 
         return (
           <div>
@@ -31,6 +33,7 @@ const Text = ({ name, label, placeholder = "", onChange }: Props) => {
                   : field.onChange
               }
             />
+            {isInvalid && <div>{form.errors.name}</div>}
           </div>
         );
       }}

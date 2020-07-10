@@ -8,7 +8,7 @@ import {
   defaultStoreContext,
 } from "../../config/context/createStoreContext";
 import { Client } from "shopify-buy";
-import CustomerProvider from "../../config/context/createCustomerProvider";
+import CustomerProvider from "../../config/providers/createCustomerProvider";
 
 class Layout extends Component {
   state = {

@@ -14,6 +14,8 @@ const Password = ({ name, label, onChange }: Props) => {
         const error = getIn(form.errors, name);
         const touched = getIn(form.touched, name);
 
+        const isInvalid = !!error && !!touched;
+
         return (
           <div>
             <label htmlFor={name}>{label}</label>
@@ -29,6 +31,7 @@ const Password = ({ name, label, onChange }: Props) => {
                   : field.onChange
               }
             />
+            {isInvalid && <div>{form.errors.name}</div>}
           </div>
         );
       }}
