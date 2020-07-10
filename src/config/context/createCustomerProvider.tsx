@@ -4,6 +4,7 @@ import { createHttpLink } from "apollo-link-http";
 import { setContext } from "apollo-link-context";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloProvider } from "react-apollo";
+import fetch from "isomorphic-fetch";
 
 const httpLink = createHttpLink({
   uri: "https://headlss.myshopify.com/api/graphql",
@@ -17,6 +18,7 @@ const middlewareLink = setContext(() => ({
 
 const client = new ApolloClient({
   link: middlewareLink.concat(httpLink),
+  fetch,
   cache: new InMemoryCache(),
 });
 
@@ -28,4 +30,4 @@ const CustomerProvider = ({ children }: Props) => {
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 };
 
-export default CustomerProvider
+export default CustomerProvider;
