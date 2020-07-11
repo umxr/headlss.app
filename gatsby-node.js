@@ -11,7 +11,7 @@ const templates = {
   ShopifyCollection: path.resolve("./src/templates/collection.tsx"),
   Dashboard: path.resolve("./src/templates/account/dashboard.tsx"),
   Login: path.resolve("./src/templates/account/Login/index.tsx"),
-  Register: path.resolve("./src/templates/account/register.tsx"),
+  Register: path.resolve("./src/templates/account/Register/index.tsx"),
   ForgotPassword: path.resolve("./src/templates/account/forgotPassword.tsx"),
   ResetPassword: path.resolve("./src/templates/account/resetPassword.tsx"),
 };

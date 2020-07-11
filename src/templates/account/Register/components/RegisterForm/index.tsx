@@ -1,15 +1,35 @@
-import * as React from "react";
-import { Formik, Form, FormikHelpers } from "formik";
-import { Button, Box, Flex, Heading, Stack } from "@chakra-ui/core";
-
+import React from "react";
+import { Box, Button, Flex, Heading, Stack } from "@chakra-ui/core";
+import { useMutation } from "@apollo/react-hooks";
+import { Form, Formik } from "formik";
 import validate from "./validate";
 import { INITIAL_VALUES } from "./constants";
 import { FormValues } from "./types";
 
 import Email from "../../../../../components/Form/Email";
 import Password from "../../../../../components/Form/Password";
+import Text from "../../../../../components/Form/Text";
+import { CUSTOMER_CREATE } from "../../mutations/customerCreate";
 
-const LoginForm = () => {
+const RegisterForm = () => {
+  const [createCustomer, { data, loading, error }] = useMutation(
+    CUSTOMER_CREATE
+  );
+  const handleSubmit = async (values: FormValues) => {
+    console.log(JSON.stringify(values, null, 2));
+    await createCustomer({
+      variables: {
+        input: values,
+      },
+    });
+  };
+
+  console.log({
+    data,
+    loading,
+    error,
+  });
+
   return (
     <Flex
       align="center"
@@ -35,24 +55,18 @@ const LoginForm = () => {
         <Formik
           validate={validate}
           initialValues={INITIAL_VALUES}
-          onSubmit={(
-            values: FormValues,
-            actions: FormikHelpers<FormValues>
-          ) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2));
-              actions.setSubmitting(false);
-            }, 1000);
-          }}
+          onSubmit={handleSubmit}
         >
-          {({ isSubmitting }) => (
+          {() => (
             <Form>
+              <Text name="firstName" label="First Name" />
+              <Text name="lastName" label="Last Name" />
               <Email name="email" label="Email" placeholder="Email" />
               <Password name="password" label="Password" />
               <Button
                 mt={4}
                 variantColor="teal"
-                isLoading={isSubmitting}
+                isLoading={loading}
                 type="submit"
               >
                 Login
@@ -65,4 +79,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default RegisterForm;

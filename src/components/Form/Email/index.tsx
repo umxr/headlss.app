@@ -1,4 +1,10 @@
 import React from "react";
+import {
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+} from "@chakra-ui/core";
 import { Field, FieldProps, getIn } from "formik";
 
 interface Props {
@@ -15,12 +21,10 @@ const Email = ({ name, label, placeholder = "Email", onChange }: Props) => {
         const error = getIn(form.errors, name);
         const touched = getIn(form.touched, name);
 
-        const isInvalid = !!error && !!touched;
-
         return (
-          <div>
-            <label htmlFor={name}>{label}</label>
-            <input
+          <FormControl isInvalid={!!error && !!touched}>
+            <FormLabel htmlFor={name}>{label}</FormLabel>
+            <Input
               {...field}
               id={name}
               type="email"
@@ -33,8 +37,8 @@ const Email = ({ name, label, placeholder = "Email", onChange }: Props) => {
                   : field.onChange
               }
             />
-            {isInvalid && <div>{form.errors.name}</div>}
-          </div>
+            <FormErrorMessage>{form.errors[name]}</FormErrorMessage>
+          </FormControl>
         );
       }}
     </Field>

@@ -41,6 +41,7 @@
     "gatsby-source-filesystem": "^2.3.14",
     "gatsby-source-shopify": "^3.2.18",
     "gatsby-transformer-sharp": "^2.5.7",
+    "graphql-tag": "^2.10.4",
     "isomorphic-fetch": "^2.2.1",
     "node-sass": "^4.14.1",
     "prop-types": "^15.7.2",
