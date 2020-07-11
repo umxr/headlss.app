@@ -1,6 +1,7 @@
 import * as React from "react";
-import { Formik, Form, FormikHelpers } from "formik";
-import { Button, Box, Flex, Heading, Stack } from "@chakra-ui/core";
+import { Formik, Form } from "formik";
+import { useMutation } from "@apollo/react-hooks";
+import { Button, Box, Flex, Heading, Stack, useToast } from "@chakra-ui/core";
 
 import validate from "./validate";
 import { INITIAL_VALUES } from "./constants";
@@ -8,8 +9,59 @@ import { FormValues } from "./types";
 
 import Email from "../../../../../components/Form/Email";
 import Password from "../../../../../components/Form/Password";
+import { CUSTOMER_ACCESS_TOKEN_CREATE } from "../../mutations/customerAccessTokenCreate";
+import { useContext } from "react";
+import { CustomerContext } from "../../../../../config/context/createCustomerContext";
 
 const LoginForm = () => {
+  const { setAccessToken, customerAccessToken } = useContext(CustomerContext);
+  const toast = useToast();
+  const [customerAccessTokenCreate, { loading }] = useMutation(
+    CUSTOMER_ACCESS_TOKEN_CREATE
+  );
+
+  const handleSubmit = (values: FormValues) => {
+    customerAccessTokenCreate({
+      variables: {
+        input: values,
+      },
+    })
+      .then(({ data }) => {
+        if (data.customerAccessTokenCreate.customerAccessToken) {
+          setAccessToken(
+            data.customerAccessTokenCreate.customerAccessToken.accessToken
+          );
+          toast({
+            title: "Success!",
+            description: "You've successfully logged in.",
+            status: "success",
+            duration: 2500,
+            isClosable: true,
+          });
+        }
+        if (data.customerAccessTokenCreate.customerUserErrors.length) {
+          const [error] = data.customerAccessTokenCreate.customerUserErrors;
+          toast({
+            title: "Error.",
+            description: error.message,
+            status: "error",
+            duration: 2500,
+            isClosable: true,
+          });
+        }
+      })
+      .catch((e) => {
+        const message = e.toString().replace("Error: GraphQL error:", "");
+        toast({
+          title: "Error.",
+          description: message,
+          status: "error",
+          duration: 2500,
+          isClosable: true,
+        });
+      });
+  };
+
   return (
     <Flex
       align="center"
@@ -35,24 +87,16 @@ const LoginForm = () => {
         <Formik
           validate={validate}
           initialValues={INITIAL_VALUES}
-          onSubmit={(
-            values: FormValues,
-            actions: FormikHelpers<FormValues>
-          ) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2));
-              actions.setSubmitting(false);
-            }, 1000);
-          }}
+          onSubmit={handleSubmit}
         >
-          {({ isSubmitting }) => (
+          {() => (
             <Form>
               <Email name="email" label="Email" placeholder="Email" />
               <Password name="password" label="Password" />
               <Button
                 mt={4}
                 variantColor="teal"
-                isLoading={isSubmitting}
+                isLoading={loading}
                 type="submit"
               >
                 Login

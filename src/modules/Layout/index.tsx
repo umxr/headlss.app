@@ -12,9 +12,62 @@ import { Client } from "shopify-buy";
 import CustomerProvider from "../../config/providers/createCustomerProvider";
 
 import theme from "../../theme";
+import {
+  CustomerContext,
+  defaultCustomerContext,
+} from "../../config/context/createCustomerContext";
 
 class Layout extends Component {
   state = {
+    customer: {
+      ...defaultCustomerContext,
+      getAccessToken: () => {
+        const isBrowser = typeof window !== "undefined";
+        if (!isBrowser) return;
+        const customerAccessToken = isBrowser
+          ? localStorage.getItem("shopify_customer_token")
+          : null;
+        this.setState((state) => {
+          return {
+            customer: {
+              ...state.customer,
+              customerAccessToken,
+            },
+          };
+        });
+      },
+      setAccessToken: (customerAccessToken: string) => {
+        if (!customerAccessToken) return;
+        const isBrowser = typeof window !== "undefined";
+        if (isBrowser) {
+          this.setState((state) => {
+            return {
+              customer: {
+                ...state.customer,
+                customerAccessToken,
+              },
+            };
+          });
+          localStorage.setItem("shopify_customer_token", customerAccessToken);
+        }
+      },
+      deleteAccessToken: () => {
+        const isBrowser = typeof window !== "undefined";
+        if (!isBrowser) return;
+        const { customerAccessToken } = this.state.customer;
+        if (customerAccessToken) {
+          this.setState((state) => {
+            return {
+              customer: {
+                ...state.customer,
+                customerAccessToken: null,
+              },
+            };
+          });
+          localStorage.removeItem("shopify_customer_token");
+        }
+      },
+    },
     store: {
       ...defaultStoreContext,
       addVariantToCart: (variantId: string, quantity: number) => {
@@ -130,9 +183,16 @@ class Layout extends Component {
     setCheckoutInState(newCheckout);
   }
 
+  initializeCustomer() {
+    const isBrowser = typeof window !== "undefined";
+    if (!isBrowser) return;
+    this.state.customer.getAccessToken();
+  }
+
   componentDidMount() {
     // Make sure we have a Shopify checkout created for cart management.
     this.initializeCheckout();
+    this.initializeCustomer();
   }
 
   render() {
@@ -141,11 +201,13 @@ class Layout extends Component {
       <ChakraProvider theme={theme}>
         <CSSReset />
         <StoreContext.Provider value={this.state.store}>
-          <CustomerProvider>
-            <Header />
-            <main>{children}</main>
-            <Footer />
-          </CustomerProvider>
+          <CustomerContext.Provider value={this.state.customer}>
+            <CustomerProvider>
+              <Header />
+              <main>{children}</main>
+              <Footer />
+            </CustomerProvider>
+          </CustomerContext.Provider>
         </StoreContext.Provider>
       </ChakraProvider>
     );

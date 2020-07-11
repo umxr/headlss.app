@@ -1,5 +1,5 @@
-import React from "react";
-import Client  from "shopify-buy";
+import { createContext } from "react";
+import Client from "shopify-buy";
 
 const client = Client.buildClient({
   domain: "headlss.myshopify.com",
@@ -15,16 +15,16 @@ export const defaultStoreContext = {
   shop: {},
   addVariantToCart: (variantId: string, quantity: number) => {},
   removeLineItem: (
-      client: ShopifyBuy.Client,
-      checkoutId: string,
-      lineItemId: string | number
+    client: ShopifyBuy.Client,
+    checkoutId: string,
+    lineItemId: string | number
   ) => {},
   updateLineItem: (
-      client: ShopifyBuy.Client,
-      checkoutId: string,
-      lineItemId: string | number,
-      quantity: number
+    client: ShopifyBuy.Client,
+    checkoutId: string,
+    lineItemId: string | number,
+    quantity: number
   ) => {},
 };
 
-export const StoreContext = React.createContext(defaultStoreContext);
+export const StoreContext = createContext(defaultStoreContext);
