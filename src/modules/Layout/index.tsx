@@ -236,7 +236,6 @@ class Layout extends Component {
       this.state.customer.getAccessToken();
       this.state.customer.getExpiry();
     }
-
   }
 
   componentDidMount() {
