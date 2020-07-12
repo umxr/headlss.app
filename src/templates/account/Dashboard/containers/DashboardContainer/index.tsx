@@ -2,6 +2,8 @@ import React from "react";
 import Layout from "../../../../../modules/Layout";
 import DashboardDetails from "../../components/DashboardDetails";
 import { Stack } from "@chakra-ui/core";
+import DashboardPreferences from "../../components/DashboardPreferences";
+import DashboardAddress from "../../components/DashboardAddress";
 
 const DashboardContainer = () => {
   return (
@@ -18,6 +20,8 @@ const DashboardContainer = () => {
         spacing={6}
       >
         <DashboardDetails />
+        <DashboardPreferences />
+        <DashboardAddress />
       </Stack>
     </Layout>
   );

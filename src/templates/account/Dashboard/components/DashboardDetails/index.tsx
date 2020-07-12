@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { useQuery, useMutation } from "react-apollo";
 import { Box, Heading } from "@chakra-ui/core";
 import { CUSTOMER_REQUEST } from "../../queries/customerRequest";
@@ -24,7 +23,7 @@ import {
 import { FaEdit, FaCheck } from "react-icons/all";
 import { CUSTOMER_UPDATE } from "../../mutations/customerUpdate";
 
-const DashboardDetails = () => {
+const DashboardDetails = (props) => {
   const toast = useToast();
   const { customerAccessToken } = useContext(CustomerContext);
   const { loading, error, data } = useQuery(CUSTOMER_REQUEST, {
@@ -43,7 +42,6 @@ const DashboardDetails = () => {
       setFirstName(data.customer.firstName);
       setLastName(data.customer.lastName);
       setEmail(data.customer.email);
-      setPhone(data.customer.phone);
     }
   }, [data]);
 
@@ -53,55 +51,52 @@ const DashboardDetails = () => {
   const [email, setEmail] = useState<string>("");
   const [editEmail, setEditEmail] = useState<boolean>(true);
 
-  const [phone, setPhone] = useState<string>("");
-  const [editPhone, setEditPhone] = useState<boolean>(true);
+  // TODO: Phone numbers needs to be Formatted using E.164. Need to find a lib which can do this based on a string value
+  // const [phone, setPhone] = useState<string>("");
+  // const [editPhone, setEditPhone] = useState<boolean>(true);
 
   const handleUpdate = () => {
-    // const parsedNumber = parsePhoneNumberFromString(phone);
-    // console.log(parsedNumber);
-    console.log({ firstName, lastName, email, phone });
-    // customerUpdate({
-    //   variables: {
-    //     customerAccessToken,
-    //     customer: {
-    //       firstName,
-    //       lastName,
-    //       email,
-    //       phone,
-    //     },
-    //   },
-    // })
-    //   .then(({ data }) => {
-    //     if (data.customerUpdate.customerUserErrors.length === 0) {
-    //       toast({
-    //         title: "Success.",
-    //         description: "You're account details have been updated.",
-    //         status: "success",
-    //         duration: 2500,
-    //         isClosable: true,
-    //       });
-    //     }
-    //     if (data.customerUpdate.customerUserErrors.length) {
-    //       const [error] = data.customerUpdate.customerUserErrors;
-    //       toast({
-    //         title: "Error.",
-    //         description: error.message,
-    //         status: "error",
-    //         duration: 2500,
-    //         isClosable: true,
-    //       });
-    //     }
-    //   })
-    //   .catch((e) => {
-    //     const message = e.toString().replace("Error: GraphQL error:", "");
-    //     toast({
-    //       title: "Error.",
-    //       description: message,
-    //       status: "error",
-    //       duration: 2500,
-    //       isClosable: true,
-    //     });
-    //   });
+    customerUpdate({
+      variables: {
+        customerAccessToken,
+        customer: {
+          firstName,
+          lastName,
+          email,
+        },
+      },
+    })
+      .then(({ data }) => {
+        if (data.customerUpdate.customerUserErrors.length === 0) {
+          toast({
+            title: "Success.",
+            description: "You're account details have been updated.",
+            status: "success",
+            duration: 2500,
+            isClosable: true,
+          });
+        }
+        if (data.customerUpdate.customerUserErrors.length) {
+          const [error] = data.customerUpdate.customerUserErrors;
+          toast({
+            title: "Error.",
+            description: error.message,
+            status: "error",
+            duration: 2500,
+            isClosable: true,
+          });
+        }
+      })
+      .catch((e) => {
+        const message = e.toString().replace("Error: GraphQL error:", "");
+        toast({
+          title: "Error.",
+          description: message,
+          status: "error",
+          duration: 2500,
+          isClosable: true,
+        });
+      });
   };
 
   if (!data && loading) {
@@ -122,14 +117,8 @@ const DashboardDetails = () => {
     );
   }
 
-  console.log({
-    loading,
-    error,
-    data,
-  });
-
   return (
-    <Box borderWidth="1px" borderRadius="lg">
+    <Box borderWidth="1px" borderRadius="lg" {...props}>
       <Box p={4}>
         <Heading as="h2" size="md" mb={4}>
           Personal Details
@@ -193,29 +182,27 @@ const DashboardDetails = () => {
               </InputRightElement>
             </InputGroup>
           </FormControl>
-          <FormControl>
-            <FormLabel htmlFor="phone">Phone</FormLabel>
-            <InputGroup>
-              <Input
-                isDisabled={editPhone}
-                pr="7rem"
-                defaultValue={data.customer.phone}
-                onChange={(e) => setPhone(e.target.value)}
-                type="tel"
-              />
-              <InputRightElement height="100%">
-                <Button h="1.75rem" onClick={() => setEditPhone(!editPhone)}>
-                  {editPhone ? <FaEdit /> : <FaCheck />}
-                </Button>
-              </InputRightElement>
-            </InputGroup>
-          </FormControl>
+          {/*<FormControl>*/}
+          {/*  <FormLabel htmlFor="phone">Phone</FormLabel>*/}
+          {/*  <InputGroup>*/}
+          {/*    <Input*/}
+          {/*      isDisabled={editPhone}*/}
+          {/*      pr="7rem"*/}
+          {/*      defaultValue={data.customer.phone}*/}
+          {/*      onChange={(e) => setPhone(e.target.value)}*/}
+          {/*      type="tel"*/}
+          {/*    />*/}
+          {/*    <InputRightElement height="100%">*/}
+          {/*      <Button h="1.75rem" onClick={() => setEditPhone(!editPhone)}>*/}
+          {/*        {editPhone ? <FaEdit /> : <FaCheck />}*/}
+          {/*      </Button>*/}
+          {/*    </InputRightElement>*/}
+          {/*  </InputGroup>*/}
+          {/*</FormControl>*/}
           <Button
             onClick={handleUpdate}
             isLoading={mutationLoading}
-            isDisabled={
-              !editPhone || !editLastName || !editFirstName || !editEmail
-            }
+            isDisabled={!editLastName || !editFirstName || !editEmail}
           >
             Update
           </Button>

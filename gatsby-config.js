@@ -1,6 +1,6 @@
 module.exports = {
   siteMetadata: {
-    siteUrl: "https://store.gatsbyjs.org",
+    siteUrl: "https://headlss.app",
     title: `Headlss`,
     description: `Future of Headless Commerce`,
     author: `@Statement`,
