@@ -14,11 +14,15 @@ import { useContext } from "react";
 import { CustomerContext } from "../../../../../config/context/createCustomerContext";
 
 const LoginForm = () => {
-  const { setAccessToken, customerAccessToken } = useContext(CustomerContext);
+  const { setAccessToken, setExpiry, customerAccessToken, expiry } = useContext(
+    CustomerContext
+  );
   const toast = useToast();
   const [customerAccessTokenCreate, { loading }] = useMutation(
     CUSTOMER_ACCESS_TOKEN_CREATE
   );
+
+  console.log("expiry", expiry);
 
   const handleSubmit = (values: FormValues) => {
     customerAccessTokenCreate({
@@ -30,6 +34,9 @@ const LoginForm = () => {
         if (data.customerAccessTokenCreate.customerAccessToken) {
           setAccessToken(
             data.customerAccessTokenCreate.customerAccessToken.accessToken
+          );
+          setExpiry(
+            data.customerAccessTokenCreate.customerAccessToken.expiresAt
           );
           toast({
             title: "Success!",

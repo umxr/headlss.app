@@ -16,6 +16,7 @@ import {
   CustomerContext,
   defaultCustomerContext,
 } from "../../config/context/createCustomerContext";
+import moment from "moment";
 
 class Layout extends Component {
   state = {
@@ -36,19 +37,20 @@ class Layout extends Component {
           };
         });
       },
-      setAccessToken: (customerAccessToken: string) => {
-        if (!customerAccessToken) return;
+      deleteExpiry: () => {
         const isBrowser = typeof window !== "undefined";
-        if (isBrowser) {
+        if (!isBrowser) return;
+        const { expiry } = this.state.customer;
+        if (expiry) {
           this.setState((state) => {
             return {
               customer: {
                 ...state.customer,
-                customerAccessToken,
+                expiry: null,
               },
             };
           });
-          localStorage.setItem("shopify_customer_token", customerAccessToken);
+          localStorage.removeItem("shopify_customer_expiry");
         }
       },
       deleteAccessToken: () => {
@@ -65,6 +67,68 @@ class Layout extends Component {
             };
           });
           localStorage.removeItem("shopify_customer_token");
+        }
+      },
+      checkExpiry: () => {
+        const isBrowser = typeof window !== "undefined";
+        if (!isBrowser) return;
+        const { expiry } = this.state.customer;
+        if (!expiry) return false;
+        const expiryDate = moment(expiry);
+        return expiryDate.isAfter(moment());
+      },
+      getExpiry: () => {
+        const isBrowser = typeof window !== "undefined";
+        if (!isBrowser) return;
+        const expiry = isBrowser
+          ? localStorage.getItem("shopify_customer_expiry")
+          : null;
+        this.setState(
+          (state) => {
+            return {
+              customer: {
+                ...state.customer,
+                expiry,
+              },
+            };
+          },
+          () => {
+            const valid = this.state.customer.checkExpiry();
+            if (!valid) {
+              this.state.customer.deleteAccessToken();
+              this.state.customer.deleteExpiry();
+            }
+          }
+        );
+      },
+      setAccessToken: (customerAccessToken: string) => {
+        if (!customerAccessToken) return;
+        const isBrowser = typeof window !== "undefined";
+        if (isBrowser) {
+          this.setState((state) => {
+            return {
+              customer: {
+                ...state.customer,
+                customerAccessToken,
+              },
+            };
+          });
+          localStorage.setItem("shopify_customer_token", customerAccessToken);
+        }
+      },
+      setExpiry: (expiry: string) => {
+        if (!expiry) return;
+        const isBrowser = typeof window !== "undefined";
+        if (isBrowser) {
+          this.setState((state) => {
+            return {
+              customer: {
+                ...state.customer,
+                expiry,
+              },
+            };
+          });
+          localStorage.setItem("shopify_customer_expiry", expiry);
         }
       },
     },
@@ -187,6 +251,7 @@ class Layout extends Component {
     const isBrowser = typeof window !== "undefined";
     if (!isBrowser) return;
     this.state.customer.getAccessToken();
+    this.state.customer.getExpiry();
   }
 
   componentDidMount() {
