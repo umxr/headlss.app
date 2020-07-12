@@ -80,7 +80,7 @@ const LoginForm = () => {
         maxW="lg"
         padding={4}
         borderWidth="1px"
-        rounded="lg"
+        borderRadius="lg"
         overflow="hidden"
         width="100%"
         spacing={3}

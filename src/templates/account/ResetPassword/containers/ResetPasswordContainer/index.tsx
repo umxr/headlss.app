@@ -9,7 +9,6 @@ const ResetPasswordContainer = () => {
   if (!token) return navigate("/account/forgot");
   const [id, resetToken] = token.split("/");
   const encodedId = btoa(`gid://shopify/Customer/${id}`);
-  console.log(encodedId);
   return (
     <Layout>
       <ResetPasswordForm id={encodedId} resetToken={resetToken} />

@@ -33,6 +33,7 @@ class Layout extends Component {
             customer: {
               ...state.customer,
               customerAccessToken,
+              authenticated: !!customerAccessToken,
             },
           };
         });
@@ -63,6 +64,7 @@ class Layout extends Component {
               customer: {
                 ...state.customer,
                 customerAccessToken: null,
+                authenticated: false,
               },
             };
           });
@@ -110,6 +112,7 @@ class Layout extends Component {
               customer: {
                 ...state.customer,
                 customerAccessToken,
+                authenticated: true,
               },
             };
           });
