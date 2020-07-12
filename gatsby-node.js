@@ -9,11 +9,11 @@ const path = require("path");
 const templates = {
   ShopifyProduct: path.resolve("./src/templates/product.tsx"),
   ShopifyCollection: path.resolve("./src/templates/collection.tsx"),
-  Dashboard: path.resolve("./src/templates/account/dashboard.tsx"),
   Login: path.resolve("./src/templates/account/Login/index.tsx"),
-  Register: path.resolve("./src/templates/account/register.tsx"),
-  ForgotPassword: path.resolve("./src/templates/account/forgotPassword.tsx"),
-  ResetPassword: path.resolve("./src/templates/account/resetPassword.tsx"),
+  Register: path.resolve("./src/templates/account/Register/index.tsx"),
+  ForgotPassword: path.resolve("./src/templates/account/ForgotPassword/index.tsx"),
+  ResetPassword: path.resolve("./src/templates/account/ResetPassword/index.tsx"),
+  Dashboard: path.resolve("./src/templates/account/Dashboard/index.tsx"),
 };
 
 exports.createPages = async ({ graphql, actions: { createPage } }) => {
@@ -73,13 +73,18 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
     context: {},
   });
   createPage({
-    path: "/account/password-forgot",
+    path: "/account/forgot",
     component: templates["ForgotPassword"],
     context: {},
   });
   createPage({
-    path: "/account/password-reset",
+    path: "/account/reset",
     component: templates["ResetPassword"],
+    context: {},
+  });
+  createPage({
+    path: "/account/dashboard",
+    component: templates["Dashboard"],
     context: {},
   });
 };

@@ -10,25 +10,23 @@ import { Field, FieldProps, getIn } from "formik";
 interface Props {
   name: string;
   label: string;
-  placeholder?: string;
   onChange?: (value: string) => void;
 }
 
-const Text = ({ name, label, placeholder = "", onChange }: Props) => {
+const Password = ({ name, label, onChange }: Props) => {
   return (
       <Field name={name}>
         {({ field, form }: FieldProps) => {
-          const errors = getIn(form.errors, name);
+          const error = getIn(form.errors, name);
           const touched = getIn(form.touched, name);
 
           return (
-              <FormControl isInvalid={!!errors && !!touched}>
+              <FormControl isInvalid={!!error && !!touched}>
                 <FormLabel htmlFor={name}>{label}</FormLabel>
                 <Input
                     {...field}
                     id={name}
-                    type="text"
-                    placeholder={placeholder}
+                    type="password"
                     onChange={
                       onChange
                           ? (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,4 +43,4 @@ const Text = ({ name, label, placeholder = "", onChange }: Props) => {
   );
 };
 
-export default Text;
+export default Password;

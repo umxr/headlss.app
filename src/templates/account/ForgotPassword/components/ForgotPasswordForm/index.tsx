@@ -1,51 +1,36 @@
-import * as React from "react";
-import { Formik, Form } from "formik";
+import React from "react";
+import { Box, Button, Flex, Heading, Stack, useToast } from "@chakra-ui/core";
 import { useMutation } from "@apollo/react-hooks";
-import { Button, Box, Flex, Heading, Stack, useToast } from "@chakra-ui/core";
-
+import { Form, Formik } from "formik";
 import validate from "./validate";
 import { INITIAL_VALUES } from "./constants";
 import { FormValues } from "./types";
 
 import Email from "../../../../../components/Form/Email";
-import Password from "../../../../../components/Form/Password";
-import { CUSTOMER_ACCESS_TOKEN_CREATE } from "../../mutations/customerAccessTokenCreate";
-import { useContext } from "react";
-import { CustomerContext } from "../../../../../config/context/createCustomerContext";
+import { CUSTOMER_RECOVER } from "../../mutations/customerRecover";
 
-const LoginForm = () => {
-  const { setAccessToken, setExpiry, customerAccessToken, expiry } = useContext(
-    CustomerContext
-  );
+const ForgotPasswordForm = () => {
   const toast = useToast();
-  const [customerAccessTokenCreate, { loading }] = useMutation(
-    CUSTOMER_ACCESS_TOKEN_CREATE
-  );
-
+  const [customerRecover, { loading }] = useMutation(CUSTOMER_RECOVER);
   const handleSubmit = (values: FormValues) => {
-    customerAccessTokenCreate({
+    customerRecover({
       variables: {
-        input: values,
+        email: values.email,
       },
     })
       .then(({ data }) => {
-        if (data.customerAccessTokenCreate.customerAccessToken) {
-          setAccessToken(
-            data.customerAccessTokenCreate.customerAccessToken.accessToken
-          );
-          setExpiry(
-            data.customerAccessTokenCreate.customerAccessToken.expiresAt
-          );
+        if (data.customerRecover.customerUserErrors.length === 0) {
           toast({
-            title: "Success!",
-            description: "You've successfully logged in.",
+            title: "Success.",
+            description:
+              "We've sent a password recovery email, Please check your inbox.",
             status: "success",
             duration: 2500,
             isClosable: true,
           });
         }
-        if (data.customerAccessTokenCreate.customerUserErrors.length) {
-          const [error] = data.customerAccessTokenCreate.customerUserErrors;
+        if (data.customerRecover.customerUserErrors.length) {
+          const [error] = data.customerRecover.customerUserErrors;
           toast({
             title: "Error.",
             description: error.message,
@@ -87,7 +72,7 @@ const LoginForm = () => {
         as={Box}
       >
         <Heading as="h1" size="lg">
-          Login
+          Forgot Password
         </Heading>
         <Formik
           validate={validate}
@@ -97,14 +82,13 @@ const LoginForm = () => {
           {() => (
             <Form>
               <Email name="email" label="Email" placeholder="Email" />
-              <Password name="password" label="Password" />
               <Button
                 mt={4}
                 variantColor="teal"
                 isLoading={loading}
                 type="submit"
               >
-                Login
+                Submit
               </Button>
             </Form>
           )}
@@ -114,4 +98,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default ForgotPasswordForm;
