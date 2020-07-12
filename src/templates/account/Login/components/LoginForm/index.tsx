@@ -22,8 +22,6 @@ const LoginForm = () => {
     CUSTOMER_ACCESS_TOKEN_CREATE
   );
 
-  console.log("expiry", expiry);
-
   const handleSubmit = (values: FormValues) => {
     customerAccessTokenCreate({
       variables: {
