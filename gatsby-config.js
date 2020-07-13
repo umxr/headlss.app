@@ -35,8 +35,18 @@ module.exports = {
         icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
       },
     },
-    // this (optional) plugin enables Progressive Web App + Offline functionality
-    // To learn more, visit: https://gatsby.dev/offline
     `gatsby-plugin-offline`,
+    {
+      resolve: "gatsby-source-graphql",
+      options: {
+        typeName: "Shopify",
+        fieldName: "Shopify",
+        url: "https://headlss.myshopify.com/api/graphql",
+        headers: {
+          "X-Shopify-Storefront-Access-Token":
+            "2f0365554792e450a365f05918feb654",
+        },
+      },
+    },
   ],
 };

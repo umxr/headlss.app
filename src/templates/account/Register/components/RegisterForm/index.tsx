@@ -1,51 +1,37 @@
-import * as React from "react";
-import { Formik, Form } from "formik";
+import React from "react";
+import { Box, Button, Flex, Heading, Stack, useToast } from "@chakra-ui/core";
 import { useMutation } from "@apollo/react-hooks";
-import { Button, Box, Flex, Heading, Stack, useToast } from "@chakra-ui/core";
-
+import { Form, Formik } from "formik";
 import validate from "./validate";
 import { INITIAL_VALUES } from "./constants";
 import { FormValues } from "./types";
 
 import Email from "../../../../../components/Form/Email";
 import Password from "../../../../../components/Form/Password";
-import { CUSTOMER_ACCESS_TOKEN_CREATE } from "../../mutations/customerAccessTokenCreate";
-import { useContext } from "react";
-import { CustomerContext } from "../../../../../config/context/createCustomerContext";
+import Text from "../../../../../components/Form/Text";
+import { CUSTOMER_CREATE } from "../../mutations/customerCreate";
 
-const LoginForm = () => {
-  const { setAccessToken, setExpiry, customerAccessToken, expiry } = useContext(
-    CustomerContext
-  );
+const RegisterForm = () => {
   const toast = useToast();
-  const [customerAccessTokenCreate, { loading }] = useMutation(
-    CUSTOMER_ACCESS_TOKEN_CREATE
-  );
-
+  const [customerCreate, { loading }] = useMutation(CUSTOMER_CREATE);
   const handleSubmit = (values: FormValues) => {
-    customerAccessTokenCreate({
+    customerCreate({
       variables: {
         input: values,
       },
     })
       .then(({ data }) => {
-        if (data.customerAccessTokenCreate.customerAccessToken) {
-          setAccessToken(
-            data.customerAccessTokenCreate.customerAccessToken.accessToken
-          );
-          setExpiry(
-            data.customerAccessTokenCreate.customerAccessToken.expiresAt
-          );
+        if (data.customerCreate.customer) {
           toast({
-            title: "Success!",
-            description: "You've successfully logged in.",
+            title: "Account created.",
+            description: "We've created your account for you.",
             status: "success",
             duration: 2500,
             isClosable: true,
           });
         }
-        if (data.customerAccessTokenCreate.customerUserErrors.length) {
-          const [error] = data.customerAccessTokenCreate.customerUserErrors;
+        if (data.customerCreate.customerUserErrors.length) {
+          const [error] = data.customerCreate.customerUserErrors;
           toast({
             title: "Error.",
             description: error.message,
@@ -87,7 +73,7 @@ const LoginForm = () => {
         as={Box}
       >
         <Heading as="h1" size="lg">
-          Login
+          Register
         </Heading>
         <Formik
           validate={validate}
@@ -96,6 +82,8 @@ const LoginForm = () => {
         >
           {() => (
             <Form>
+              <Text name="firstName" label="First Name" />
+              <Text name="lastName" label="Last Name" />
               <Email name="email" label="Email" placeholder="Email" />
               <Password name="password" label="Password" />
               <Button
@@ -114,4 +102,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default RegisterForm;

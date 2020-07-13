@@ -1,18 +1,29 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Box, Heading, Flex, Text, Button, IconButton } from "@chakra-ui/core";
 import { StoreContext } from "../../config/context/createStoreContext";
-import { FaShoppingCart } from "react-icons/all";
-import { Link } from "gatsby";
+import { FaShoppingCart, FaUser } from "react-icons/all";
+import { Link, navigate } from "gatsby";
 
 import { useDisclosure } from "@chakra-ui/core";
 import Drawer from "../Drawer";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
+import { CustomerContext } from "../../config/context/createCustomerContext";
 
 const Header = () => {
-  const [show, setShow] = React.useState(false);
-  const handleToggle = () => setShow(!show);
+  const { authenticated } = useContext(CustomerContext);
+  const [show, setShow] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef(null);
+
+  const handleToggle = () => setShow(!show);
+
+  const handleNavigation = () => {
+    if (typeof window !== "undefined") {
+      authenticated
+          ? navigate("/account/dashboard")
+          : navigate("/account/login");
+    }
+  }
 
   return (
     <>
@@ -88,6 +99,18 @@ const Header = () => {
               aria-label={`Cart`}
               onClick={onOpen}
               ref={btnRef}
+            />
+            <IconButton
+              size="md"
+              fontSize="lg"
+              ml={{
+                xs: "0",
+                md: "2",
+              }}
+              variant="primary"
+              icon={<FaUser />}
+              aria-label={`Account`}
+              onClick={handleNavigation}
             />
             <ColorModeSwitcher />
           </Box>
