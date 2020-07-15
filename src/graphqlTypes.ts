@@ -13,7 +13,6 @@ export type Scalars = {
    * An RFC 3986 and RFC 3987 compliant URI string.
    * 
    * Example value: `"https://johns-apparel.myshopify.com"`.
-   * 
    */
   Shopify_URL: any;
   /** A string containing HTML code. Example value: `"<p>Grey cotton knit sweater.</p>"`. */
@@ -1547,10 +1546,10 @@ export type Query = {
   allShopifyProduct: ShopifyProductConnection;
   shopifyCollection?: Maybe<ShopifyCollection>;
   allShopifyCollection: ShopifyCollectionConnection;
-  shopifyBlog?: Maybe<ShopifyBlog>;
-  allShopifyBlog: ShopifyBlogConnection;
   shopifyPage?: Maybe<ShopifyPage>;
   allShopifyPage: ShopifyPageConnection;
+  shopifyBlog?: Maybe<ShopifyBlog>;
+  allShopifyBlog: ShopifyBlogConnection;
   siteBuildMetadata?: Maybe<SiteBuildMetadata>;
   allSiteBuildMetadata: SiteBuildMetadataConnection;
   sitePlugin?: Maybe<SitePlugin>;
@@ -1691,6 +1690,8 @@ export type QuerySiteArgs = {
   siteMetadata?: Maybe<SiteSiteMetadataFilterInput>;
   port?: Maybe<DateQueryOperatorInput>;
   host?: Maybe<StringQueryOperatorInput>;
+  polyfill?: Maybe<BooleanQueryOperatorInput>;
+  pathPrefix?: Maybe<StringQueryOperatorInput>;
   id?: Maybe<StringQueryOperatorInput>;
   parent?: Maybe<NodeFilterInput>;
   children?: Maybe<NodeFilterListInput>;
@@ -1851,26 +1852,6 @@ export type QueryAllShopifyCollectionArgs = {
 };
 
 
-export type QueryShopifyBlogArgs = {
-  id?: Maybe<StringQueryOperatorInput>;
-  parent?: Maybe<NodeFilterInput>;
-  children?: Maybe<NodeFilterListInput>;
-  internal?: Maybe<InternalFilterInput>;
-  handle?: Maybe<StringQueryOperatorInput>;
-  title?: Maybe<StringQueryOperatorInput>;
-  url?: Maybe<StringQueryOperatorInput>;
-  shopifyId?: Maybe<StringQueryOperatorInput>;
-};
-
-
-export type QueryAllShopifyBlogArgs = {
-  filter?: Maybe<ShopifyBlogFilterInput>;
-  sort?: Maybe<ShopifyBlogSortInput>;
-  skip?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
-};
-
-
 export type QueryShopifyPageArgs = {
   id?: Maybe<StringQueryOperatorInput>;
   parent?: Maybe<NodeFilterInput>;
@@ -1889,6 +1870,26 @@ export type QueryShopifyPageArgs = {
 export type QueryAllShopifyPageArgs = {
   filter?: Maybe<ShopifyPageFilterInput>;
   sort?: Maybe<ShopifyPageSortInput>;
+  skip?: Maybe<Scalars['Int']>;
+  limit?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryShopifyBlogArgs = {
+  id?: Maybe<StringQueryOperatorInput>;
+  parent?: Maybe<NodeFilterInput>;
+  children?: Maybe<NodeFilterListInput>;
+  internal?: Maybe<InternalFilterInput>;
+  handle?: Maybe<StringQueryOperatorInput>;
+  title?: Maybe<StringQueryOperatorInput>;
+  url?: Maybe<StringQueryOperatorInput>;
+  shopifyId?: Maybe<StringQueryOperatorInput>;
+};
+
+
+export type QueryAllShopifyBlogArgs = {
+  filter?: Maybe<ShopifyBlogFilterInput>;
+  sort?: Maybe<ShopifyBlogSortInput>;
   skip?: Maybe<Scalars['Int']>;
   limit?: Maybe<Scalars['Int']>;
 };
@@ -7870,6 +7871,8 @@ export type Site = Node & {
   siteMetadata?: Maybe<SiteSiteMetadata>;
   port?: Maybe<Scalars['Date']>;
   host?: Maybe<Scalars['String']>;
+  polyfill?: Maybe<Scalars['Boolean']>;
+  pathPrefix?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   parent?: Maybe<Node>;
   children: Array<Node>;
@@ -8088,6 +8091,8 @@ export enum SiteFieldsEnum {
   SiteMetadataAuthor = 'siteMetadata___author',
   Port = 'port',
   Host = 'host',
+  Polyfill = 'polyfill',
+  PathPrefix = 'pathPrefix',
   Id = 'id',
   ParentId = 'parent___id',
   ParentParentId = 'parent___parent___id',
@@ -8181,6 +8186,8 @@ export type SiteFilterInput = {
   siteMetadata?: Maybe<SiteSiteMetadataFilterInput>;
   port?: Maybe<DateQueryOperatorInput>;
   host?: Maybe<StringQueryOperatorInput>;
+  polyfill?: Maybe<BooleanQueryOperatorInput>;
+  pathPrefix?: Maybe<StringQueryOperatorInput>;
   id?: Maybe<StringQueryOperatorInput>;
   parent?: Maybe<NodeFilterInput>;
   children?: Maybe<NodeFilterListInput>;

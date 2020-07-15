@@ -8,12 +8,28 @@ export const CUSTOMER_ADDRESSES = gql`
           node {
             id
             formatted(withCompany: true, withName: true)
+            address1
+            address2
+            city
+            company
+            country
+            firstName
+            lastName
+            zip
           }
         }
       }
       defaultAddress {
         id
         formatted(withCompany: true, withName: true)
+        address1
+        address2
+        city
+        company
+        country
+        firstName
+        lastName
+        zip
       }
     }
   }

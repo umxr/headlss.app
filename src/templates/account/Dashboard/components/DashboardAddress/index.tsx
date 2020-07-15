@@ -18,13 +18,23 @@ import { useQuery, useMutation } from "react-apollo";
 import { CUSTOMER_ADDRESSES } from "../../queries/customerAddresses";
 import { CustomerContext } from "../../../../../config/context/createCustomerContext";
 import AddAddresForm from "../AddAddressForm";
-import { Shopify_MailingAddressEdge } from "../../../../../graphqlTypes";
+import {
+  Shopify_MailingAddress,
+  Shopify_MailingAddressEdge,
+} from "../../../../../graphqlTypes";
 import { CUSTOMER_ADDRESS_DELETE } from "../../mutations/customerAddressDelete";
 import { CUSTOMER_DEFUALT_ADDRESS_UPDATE } from "../../mutations/customerDefaultAddressUpdate";
+import EditAddressForm from "../EditAddressForm";
+import mapAddressToFormValues from "../../utils/mapAddressToFormValues";
+
+import { FormValues } from "../EditAddressForm/types";
 
 const DashboardAddress = (props) => {
   const toast = useToast();
-  const [view, setView] = useState("read");
+  const [selectedAddress, setSelectedAddress] = useState<FormValues | null>(
+    null
+  );
+  const [view, setView] = useState<string>("read");
   const { customerAccessToken } = useContext(CustomerContext);
   const [customerAddressDelete] = useMutation(CUSTOMER_ADDRESS_DELETE);
   const [customerDefaultAddressUpdate] = useMutation(
@@ -48,6 +58,12 @@ const DashboardAddress = (props) => {
 
   const onCancel = (view: string) => {
     setView(view);
+  };
+
+  const onEdit = (address: Shopify_MailingAddress) => {
+    const selectedAddress = mapAddressToFormValues(address);
+    setView("update");
+    setSelectedAddress(selectedAddress);
   };
 
   const handleDelete = (id: string) => {
@@ -145,7 +161,7 @@ const DashboardAddress = (props) => {
       <Alert status="error">
         <AlertIcon />
         <AlertTitle mr={2}>Error!</AlertTitle>
-        <AlertDescription>{error.message}</AlertDescription>
+        <AlertDescription>{addressError.message}</AlertDescription>
       </Alert>
     );
   }
@@ -159,6 +175,13 @@ const DashboardAddress = (props) => {
         <Divider mb={4} />
         {view === "create" && (
           <AddAddresForm onCancel={onCancel} onSubmit={onSubmit} />
+        )}
+        {view === "update" && (
+          <EditAddressForm
+            selectedAddress={selectedAddress}
+            onCancel={onCancel}
+            onSubmit={onSubmit}
+          />
         )}
         {view === "read" && (
           <Stack spacing={2}>
@@ -201,6 +224,7 @@ const DashboardAddress = (props) => {
                           </Button>
                           <Button
                             minW="150px"
+                            onClick={() => onEdit(edge.node)}
                             variantColor="teal"
                             ml={0}
                             style={{
@@ -260,6 +284,7 @@ const DashboardAddress = (props) => {
                           <Button
                             minW="150px"
                             variantColor="teal"
+                            onClick={() => onEdit(edge.node)}
                             ml={0}
                             style={{
                               marginLeft: 0,

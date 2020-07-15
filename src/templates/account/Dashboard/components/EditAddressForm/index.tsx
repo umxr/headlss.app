@@ -1,43 +1,62 @@
-import React, { useContext } from "react";
-import { Button, Flex, ButtonGroup, Stack, useToast } from "@chakra-ui/core";
-import validate from "./validate";
-
-import { INITIAL_VALUES } from "./constants";
+import React, { useContext, useEffect, useState } from "react";
+import { useMutation } from "react-apollo";
+import { Button, ButtonGroup, Flex, Stack, useToast } from "@chakra-ui/core";
 import { Form, Formik, FormikHelpers } from "formik";
-
+import validate from "../AddAddressForm/validate";
+import { INITIAL_VALUES } from "../AddAddressForm/constants";
 import Text from "../../../../../components/Form/Text";
-import { useMutation } from "@apollo/react-hooks";
-import { CustomerContext } from "../../../../../config/context/createCustomerContext";
-import { CUSTOMER_ADDRESS_CREATE } from "../../mutations/customerAddressCreate";
 import { FormValues } from "./types";
+import { CustomerContext } from "../../../../../config/context/createCustomerContext";
+import { CUSTOMER_ADDRESS_UPDATE } from "../../mutations/customerAddressUpdate";
+
+interface SelectedAddress extends FormValues {
+  id: string;
+}
 
 interface Props {
   onSubmit: (view: string) => void;
   onCancel: (view: string) => void;
+  selectedAddress?: SelectedAddress;
 }
 
-const AddAddressForm = ({ onSubmit, onCancel }: Props) => {
+const EditAddressForm = ({ onSubmit, onCancel, selectedAddress }: Props) => {
   const toast = useToast();
   const { customerAccessToken } = useContext(CustomerContext);
-  const [customerAddressCreate, { loading, error }] = useMutation(
-    CUSTOMER_ADDRESS_CREATE
+  const [formState, setFormState] = useState<FormValues>(INITIAL_VALUES);
+  const [customerAddressUpdate, { loading }] = useMutation(
+    CUSTOMER_ADDRESS_UPDATE
   );
+
+  useEffect(() => {
+    if (selectedAddress) {
+      const address = {
+        ...selectedAddress,
+      };
+
+      delete address.id;
+      delete address.__typename
+
+      setFormState(address);
+    }
+  }, [selectedAddress]);
 
   const handleSubmit = (
     values: FormValues,
     actions: FormikHelpers<FormValues>
   ) => {
-    customerAddressCreate({
+    console.log(values);
+    customerAddressUpdate({
       variables: {
         customerAccessToken,
+        id: selectedAddress.id,
         address: values,
       },
     })
       .then(({ data }) => {
-        if (data.customerAddressCreate.customerUserErrors.length === 0) {
+        if (data.customerAddressUpdate.customerUserErrors.length === 0) {
           toast({
             title: "Success!",
-            description: "Address added.",
+            description: "Address Updated.",
             status: "success",
             duration: 2500,
             isClosable: true,
@@ -45,8 +64,8 @@ const AddAddressForm = ({ onSubmit, onCancel }: Props) => {
           actions.resetForm();
           onSubmit("read");
         }
-        if (data.customerAddressCreate.customerUserErrors.length) {
-          const [error] = data.customerAddressCreate.customerUserErrors;
+        if (data.customerAddressUpdate.customerUserErrors.length) {
+          const [error] = data.customerAddressDelete.customerUserErrors;
           toast({
             title: "Error.",
             description: error.message,
@@ -68,6 +87,11 @@ const AddAddressForm = ({ onSubmit, onCancel }: Props) => {
       });
   };
 
+  const handleCancel = () => {
+    onCancel("read");
+    setFormState(INITIAL_VALUES);
+  };
+
   return (
     <Flex
       align="center"
@@ -79,8 +103,9 @@ const AddAddressForm = ({ onSubmit, onCancel }: Props) => {
     >
       <Flex width="100%">
         <Formik
+          enableReinitialize={true}
           validate={validate}
-          initialValues={INITIAL_VALUES}
+          initialValues={formState}
           onSubmit={handleSubmit}
         >
           {() => {
@@ -107,10 +132,7 @@ const AddAddressForm = ({ onSubmit, onCancel }: Props) => {
                     >
                       Submit
                     </Button>
-                    <Button
-                      variantColor="teal"
-                      onClick={() => onCancel("read")}
-                    >
+                    <Button variantColor="teal" onClick={handleCancel}>
                       Cancel
                     </Button>
                   </ButtonGroup>
@@ -124,4 +146,4 @@ const AddAddressForm = ({ onSubmit, onCancel }: Props) => {
   );
 };
 
-export default AddAddressForm;
+export default EditAddressForm;

@@ -11,9 +11,6 @@ export const CUSTOMER_ADDRESS_UPDATE = gql`
       id: $id
       address: $address
     ) {
-      customerAddress {
-        id
-      }
       customerUserErrors {
         code
         field
