@@ -14,7 +14,7 @@ import { useContext } from "react";
 import { CustomerContext } from "../../../../../config/context/createCustomerContext";
 
 const LoginForm = () => {
-  const { setAccessToken, setExpiry, customerAccessToken, expiry } = useContext(
+  const { setAccessToken, setExpiry } = useContext(
     CustomerContext
   );
   const toast = useToast();

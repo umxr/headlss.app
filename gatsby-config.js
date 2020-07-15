@@ -36,6 +36,7 @@ module.exports = {
       },
     },
     `gatsby-plugin-offline`,
+    `gatsby-plugin-emotion`,
     {
       resolve: "gatsby-source-graphql",
       options: {

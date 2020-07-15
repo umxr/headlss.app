@@ -1,9 +1,8 @@
 import gql from "graphql-tag";
 
-export const CUSTOMER_ADDRESS = gql`
+export const CUSTOMER_ADDRESSES = gql`
   query customerAddresses($customerAccessToken: String!) {
     customer(customerAccessToken: $customerAccessToken) {
-      acceptsMarketing
       addresses(first: 10) {
         edges {
           node {
@@ -11,6 +10,10 @@ export const CUSTOMER_ADDRESS = gql`
             formatted(withCompany: true, withName: true)
           }
         }
+      }
+      defaultAddress {
+        id
+        formatted(withCompany: true, withName: true)
       }
     }
   }
