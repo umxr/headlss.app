@@ -1,29 +1,66 @@
 import React, { useContext, useRef, useState } from "react";
-import { Box, Heading, Flex, Text, Button, IconButton } from "@chakra-ui/core";
+import { Box, Heading, Flex, Text, IconButton } from "@chakra-ui/core";
 import { StoreContext } from "../../config/context/createStoreContext";
 import { FaShoppingCart, FaUser } from "react-icons/all";
 import { Link, navigate } from "gatsby";
+import {
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuGroup,
+} from "@chakra-ui/core";
 
 import { useDisclosure } from "@chakra-ui/core";
 import Drawer from "../Drawer";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
 import { CustomerContext } from "../../config/context/createCustomerContext";
 
+interface Props {
+  authenticated: boolean;
+  onLogout?: () => void;
+}
+
+const MenuItems = ({ authenticated, onLogout }: Props) => {
+  if (authenticated) {
+    return (
+      <MenuGroup>
+        <MenuItem as={Link} to="/account/dashboard">
+          Account
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            if (onLogout) {
+              onLogout();
+            }
+            navigate("/");
+          }}
+        >
+          Logout
+        </MenuItem>
+      </MenuGroup>
+    );
+  }
+
+  return (
+    <MenuGroup>
+      <MenuItem as={Link} to="/account/login">
+        Login
+      </MenuItem>
+      <MenuItem as={Link} to="/account/register">
+        Register
+      </MenuItem>
+    </MenuGroup>
+  );
+};
+
 const Header = () => {
-  const { authenticated } = useContext(CustomerContext);
+  const { authenticated, logout } = useContext(CustomerContext);
   const [show, setShow] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef(null);
 
   const handleToggle = () => setShow(!show);
-
-  const handleNavigation = () => {
-    if (typeof window !== "undefined") {
-      authenticated
-          ? navigate("/account/dashboard")
-          : navigate("/account/login");
-    }
-  }
 
   return (
     <>
@@ -100,18 +137,27 @@ const Header = () => {
               onClick={onOpen}
               ref={btnRef}
             />
-            <IconButton
-              size="md"
-              fontSize="lg"
-              ml={{
-                xs: "0",
-                md: "2",
-              }}
-              variant="primary"
-              icon={<FaUser />}
-              aria-label={`Account`}
-              onClick={handleNavigation}
-            />
+            <Menu>
+              <MenuButton
+                as={IconButton}
+                size="md"
+                fontSize="lg"
+                ml={{
+                  xs: "0",
+                  md: "2",
+                }}
+                icon={<FaUser />}
+                aria-label={`Account`}
+                variant="primary"
+                backgroundColor="transparent"
+              />
+              <MenuList>
+                <MenuItems
+                  authenticated={authenticated}
+                  onLogout={() => logout(navigate("/"))}
+                />
+              </MenuList>
+            </Menu>
             <ColorModeSwitcher />
           </Box>
         </Box>

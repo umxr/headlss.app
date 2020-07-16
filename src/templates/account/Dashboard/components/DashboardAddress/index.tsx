@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, Fragment } from "react";
 import {
   Box,
   Divider,
@@ -251,8 +251,8 @@ const DashboardAddress = (props) => {
                   );
                 }
                 return (
-                  <>
-                    <Flex key={edge.node.id}>
+                  <Fragment key={edge.node.id}>
+                    <Flex>
                       <Box
                         flex={1}
                         dangerouslySetInnerHTML={{
@@ -308,7 +308,7 @@ const DashboardAddress = (props) => {
                       </Box>
                     </Flex>
                     <Divider />
-                  </>
+                  </Fragment>
                 );
               }
             )}

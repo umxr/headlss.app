@@ -44,7 +44,6 @@ const EditAddressForm = ({ onSubmit, onCancel, selectedAddress }: Props) => {
     values: FormValues,
     actions: FormikHelpers<FormValues>
   ) => {
-    console.log(values);
     customerAddressUpdate({
       variables: {
         customerAccessToken,
