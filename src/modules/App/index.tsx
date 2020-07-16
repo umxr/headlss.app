@@ -118,7 +118,9 @@ class App extends Component {
       },
       deleteCustomerInstance: () => {
         const checkoutId = localStorage.getItem("shopify_checkout_id");
-        const { customerAccessToken } = this.state.customer;
+        const customerAccessToken = localStorage.getItem(
+          "shopify_customer_token"
+        );
         apolloClient
           .mutate({
             mutation: gql`
@@ -142,30 +144,34 @@ class App extends Component {
               data.checkoutCustomerDisassociateV2.checkoutUserErrors.length ===
               0
             ) {
-              apolloClient
-                .mutate({
-                  mutation: gql`
-                    mutation customerAccessTokenDelete(
-                      $customerAccessToken: String!
-                    ) {
-                      customerAccessTokenDelete(
-                        customerAccessToken: $customerAccessToken
+              if (customerAccessToken) {
+                apolloClient
+                  .mutate({
+                    mutation: gql`
+                      mutation customerAccessTokenDelete(
+                        $customerAccessToken: String!
                       ) {
-                        userErrors {
-                          field
-                          message
+                        customerAccessTokenDelete(
+                          customerAccessToken: $customerAccessToken
+                        ) {
+                          userErrors {
+                            field
+                            message
+                          }
                         }
                       }
-                    }
-                  `,
-                  variables: { customerAccessToken },
-                })
-                .catch((error) => {
-                  console.error(error);
-                });
+                    `,
+                    variables: { customerAccessToken },
+                  })
+                  .catch((error) => {
+                    console.log("customerAccessTokenDelete");
+                    console.error(error);
+                  });
+              }
             }
           })
           .catch((error) => {
+            console.log("checkoutCustomerDisassociateV2");
             console.error(error);
           });
       },
