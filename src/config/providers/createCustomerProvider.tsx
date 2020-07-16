@@ -16,7 +16,7 @@ const middlewareLink = setContext(() => ({
   },
 }));
 
-const client = new ApolloClient({
+export const apolloClient = new ApolloClient({
   link: middlewareLink.concat(httpLink),
   cache: new InMemoryCache(),
   fetch,
@@ -27,7 +27,7 @@ interface Props {
 }
 
 const CustomerProvider = ({ children }: Props) => {
-  return <ApolloProvider client={client}>{children}</ApolloProvider>;
+  return <ApolloProvider client={apolloClient}>{children}</ApolloProvider>;
 };
 
 export default CustomerProvider;
