@@ -12,8 +12,8 @@ import { CUSTOMER_ADDRESS_CREATE } from "../../mutations/customerAddressCreate";
 import { FormValues } from "./types";
 
 interface Props {
-  onSubmit: (view: string) => void;
-  onCancel: (view: string) => void;
+  onSubmit: () => void;
+  onCancel: () => void;
 }
 
 const AddAddressForm = ({ onSubmit, onCancel }: Props) => {
@@ -43,7 +43,7 @@ const AddAddressForm = ({ onSubmit, onCancel }: Props) => {
             isClosable: true,
           });
           actions.resetForm();
-          onSubmit("read");
+          onSubmit();
         }
         if (data.customerAddressCreate.customerUserErrors.length) {
           const [error] = data.customerAddressCreate.customerUserErrors;
@@ -109,7 +109,7 @@ const AddAddressForm = ({ onSubmit, onCancel }: Props) => {
                     </Button>
                     <Button
                       variantColor="teal"
-                      onClick={() => onCancel("read")}
+                      onClick={onCancel}
                     >
                       Cancel
                     </Button>

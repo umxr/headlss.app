@@ -8,15 +8,13 @@ import Text from "../../../../../components/Form/Text";
 import { FormValues } from "./types";
 import { CustomerContext } from "../../../../../config/context/createCustomerContext";
 import { CUSTOMER_ADDRESS_UPDATE } from "../../mutations/customerAddressUpdate";
-
-interface SelectedAddress extends FormValues {
-  id: string;
-}
+import { Shopify_MailingAddress } from "../../../../../graphqlTypes";
+import mapAddressToFormState from "../../utils/mapAddressToFormState";
 
 interface Props {
   onSubmit: (view: string) => void;
   onCancel: (view: string) => void;
-  selectedAddress?: SelectedAddress;
+  selectedAddress: Shopify_MailingAddress;
 }
 
 const EditAddressForm = ({ onSubmit, onCancel, selectedAddress }: Props) => {
@@ -29,12 +27,7 @@ const EditAddressForm = ({ onSubmit, onCancel, selectedAddress }: Props) => {
 
   useEffect(() => {
     if (selectedAddress) {
-      const address = {
-        ...selectedAddress,
-      };
-
-      delete address.id;
-      delete address.__typename
+      const address = mapAddressToFormState(selectedAddress);
 
       setFormState(address);
     }

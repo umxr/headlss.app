@@ -12,17 +12,15 @@ import {
   AlertDescription,
   Checkbox,
   FormControl,
-  FormLabel,
-  InputGroup,
-  InputRightElement,
   Button,
   Stack,
   Divider,
   useToast,
 } from "@chakra-ui/core";
 import { CUSTOMER_UPDATE } from "../../mutations/customerUpdate";
+import { PropsOf } from "@chakra-ui/system";
 
-const DashboardPreferences = (props) => {
+const DashboardPreferences = (props: PropsOf<typeof Box>) => {
   const toast = useToast();
   const { customerAccessToken } = useContext(CustomerContext);
   const { loading, error, data } = useQuery(CUSTOMER_MARKETING, {
@@ -91,7 +89,7 @@ const DashboardPreferences = (props) => {
 
   if (!data && error) {
     return (
-      <Alert status="error">
+      <Alert __css={{}} status="error">
         <AlertIcon />
         <AlertTitle mr={2}>Error!</AlertTitle>
         <AlertDescription>{error.message}</AlertDescription>

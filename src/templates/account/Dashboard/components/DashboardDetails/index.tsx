@@ -1,4 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
+import PhoneInput, { parsePhoneNumber } from "react-phone-number-input";
+import { PhoneNumberFormat, PhoneNumberUtil } from "google-libphonenumber";
 import { useQuery, useMutation } from "react-apollo";
 import { Box, Heading } from "@chakra-ui/core";
 import { CUSTOMER_REQUEST } from "../../queries/customerRequest";
@@ -22,8 +24,12 @@ import {
 } from "@chakra-ui/core";
 import { FaEdit, FaCheck } from "react-icons/all";
 import { CUSTOMER_UPDATE } from "../../mutations/customerUpdate";
+import { PropsOf } from "@chakra-ui/system";
+import "react-phone-number-input/style.css";
 
-const DashboardDetails = (props) => {
+const phoneUtil = PhoneNumberUtil.getInstance();
+
+const DashboardDetails = (props: PropsOf<typeof Box>) => {
   const toast = useToast();
   const { customerAccessToken } = useContext(CustomerContext);
   const { loading, error, data } = useQuery(CUSTOMER_REQUEST, {
@@ -33,17 +39,8 @@ const DashboardDetails = (props) => {
     CUSTOMER_UPDATE
   );
 
-  // TODO: this needs to be re-approached
   const [firstName, setFirstName] = useState<string>("");
   const [editFirstName, setEditFirstName] = useState<boolean>(true);
-
-  useEffect(() => {
-    if (data && data.customer) {
-      setFirstName(data.customer.firstName);
-      setLastName(data.customer.lastName);
-      setEmail(data.customer.email);
-    }
-  }, [data]);
 
   const [lastName, setLastName] = useState<string>("");
   const [editLastName, setEditLastName] = useState<boolean>(true);
@@ -51,11 +48,26 @@ const DashboardDetails = (props) => {
   const [email, setEmail] = useState<string>("");
   const [editEmail, setEditEmail] = useState<boolean>(true);
 
-  // TODO: Phone numbers needs to be Formatted using E.164. Need to find a lib which can do this based on a string value
-  // const [phone, setPhone] = useState<string>("");
-  // const [editPhone, setEditPhone] = useState<boolean>(true);
+  const [phone, setPhone] = useState<string>("");
+  const [editPhone, setEditPhone] = useState<boolean>(true);
+
+  const formatPhone = (phone: string) => {
+    const { number } = parsePhoneNumber(String(phone));
+    return number;
+  };
+
+  useEffect(() => {
+    if (data && data.customer) {
+      setFirstName(data.customer.firstName);
+      setLastName(data.customer.lastName);
+      setEmail(data.customer.email);
+      setPhone(data.customer.phone);
+    }
+  }, [data]);
 
   const handleUpdate = () => {
+    formatPhone(phone);
+    return false;
     customerUpdate({
       variables: {
         customerAccessToken,
@@ -63,6 +75,7 @@ const DashboardDetails = (props) => {
           firstName,
           lastName,
           email,
+          phone: formatPhone(phone),
         },
       },
     })
@@ -109,7 +122,7 @@ const DashboardDetails = (props) => {
 
   if (!data && error) {
     return (
-      <Alert status="error">
+      <Alert __css={{}} status="error">
         <AlertIcon />
         <AlertTitle mr={2}>Error!</AlertTitle>
         <AlertDescription>{error.message}</AlertDescription>
@@ -182,27 +195,31 @@ const DashboardDetails = (props) => {
               </InputRightElement>
             </InputGroup>
           </FormControl>
-          {/*<FormControl>*/}
-          {/*  <FormLabel htmlFor="phone">Phone</FormLabel>*/}
-          {/*  <InputGroup>*/}
-          {/*    <Input*/}
-          {/*      isDisabled={editPhone}*/}
-          {/*      pr="7rem"*/}
-          {/*      defaultValue={data.customer.phone}*/}
-          {/*      onChange={(e) => setPhone(e.target.value)}*/}
-          {/*      type="tel"*/}
-          {/*    />*/}
-          {/*    <InputRightElement height="100%">*/}
-          {/*      <Button h="1.75rem" onClick={() => setEditPhone(!editPhone)}>*/}
-          {/*        {editPhone ? <FaEdit /> : <FaCheck />}*/}
-          {/*      </Button>*/}
-          {/*    </InputRightElement>*/}
-          {/*  </InputGroup>*/}
-          {/*</FormControl>*/}
+          <FormControl>
+            <FormLabel htmlFor="phone">Phone</FormLabel>
+            <InputGroup>
+              <PhoneInput
+                isDisabled={editPhone}
+                inputComponent={Input}
+                value={phone}
+                onChange={setPhone}
+                style={{
+                  flex: 1,
+                }}
+              />
+              <InputRightElement height="100%">
+                <Button h="1.75rem" onClick={() => setEditPhone(!editPhone)}>
+                  {editPhone ? <FaEdit /> : <FaCheck />}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
+          </FormControl>
           <Button
             onClick={handleUpdate}
             isLoading={mutationLoading}
-            isDisabled={!editLastName || !editFirstName || !editEmail}
+            isDisabled={
+              !editPhone || !editLastName || !editFirstName || !editEmail
+            }
           >
             Update
           </Button>
