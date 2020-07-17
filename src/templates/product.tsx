@@ -1,19 +1,19 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import { graphql } from "gatsby";
-import { QueryImageSharpArgs, ShopifyProduct, Site } from "../graphqlTypes";
+import { ShopifyProduct, Site } from "../graphqlTypes";
 import Layout from "../modules/Layout";
 import ProductForm from "../components/pages/Product/ProductForm";
 
-interface ChildImageSharp {
-  childImageSharp: QueryImageSharpArgs;
+interface Image {
+  absolutePath: string;
 }
 
 interface Props {
   data: {
     site: Site;
     shopifyProduct: ShopifyProduct;
-    placeholderImage: ChildImageSharp;
+    placeholderImage: Image;
   };
   location: Location;
 }
@@ -31,11 +31,13 @@ const Product = (props: Props) => {
     : "Shopify Product Description";
   const handle = product.handle;
 
-  // TODO: Create a better way to handle deeply nested property checking
-  // @ts-ignore
-  const image = product.images[0].localFile.url
-    ? product.images[0].localFile.url
-    : placeholderImage.childImageSharp.fluid?.src;
+  let image;
+  const [productImage] = product.images;
+  if (productImage && productImage.originalSrc) {
+    image = productImage.originalSrc;
+  } else {
+    image = placeholderImage.absolutePath;
+  }
 
   return (
     <Layout>
@@ -51,7 +53,6 @@ const Product = (props: Props) => {
         <meta property="og:title" content={title} />
         <meta property="og:site_name" content="Headlss" />
         <meta property="og:description" content={description} />
-        // @ts-ignore This can be removed once "TODO" Above is fixed
         <meta property="og:image" content={image} />
         <meta property="og:image:alt" content={title} />
         <meta property="og:image:width" content="600" />
@@ -76,11 +77,7 @@ export const query = graphql`
       }
     }
     placeholderImage: file(relativePath: { eq: "gatsby-astronaut.png" }) {
-      childImageSharp {
-        fluid(maxWidth: 480, maxHeight: 480) {
-          ...GatsbyImageSharpFluid
-        }
-      }
+      absolutePath
     }
     shopifyProduct(handle: { eq: $handle }) {
       shopifyId
@@ -111,16 +108,8 @@ export const query = graphql`
         }
       }
       images {
-        id
         altText
-        localFile {
-          url
-          childImageSharp {
-            fluid(maxWidth: 480, maxHeight: 480) {
-              ...GatsbyImageSharpFluid_withWebp
-            }
-          }
-        }
+        originalSrc
       }
     }
   }

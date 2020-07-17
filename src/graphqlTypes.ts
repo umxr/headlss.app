@@ -13,6 +13,7 @@ export type Scalars = {
    * An RFC 3986 and RFC 3987 compliant URI string.
    * 
    * Example value: `"https://johns-apparel.myshopify.com"`.
+   * 
    */
   Shopify_URL: any;
   /** A string containing HTML code. Example value: `"<p>Grey cotton knit sweater.</p>"`. */
@@ -1538,14 +1539,14 @@ export type Query = {
   allImageSharp: ImageSharpConnection;
   graphQlSource?: Maybe<GraphQlSource>;
   allGraphQlSource: GraphQlSourceConnection;
+  shopifyCollection?: Maybe<ShopifyCollection>;
+  allShopifyCollection: ShopifyCollectionConnection;
   shopifyProductOption?: Maybe<ShopifyProductOption>;
   allShopifyProductOption: ShopifyProductOptionConnection;
   shopifyProductVariant?: Maybe<ShopifyProductVariant>;
   allShopifyProductVariant: ShopifyProductVariantConnection;
   shopifyProduct?: Maybe<ShopifyProduct>;
   allShopifyProduct: ShopifyProductConnection;
-  shopifyCollection?: Maybe<ShopifyCollection>;
-  allShopifyCollection: ShopifyCollectionConnection;
   shopifyPage?: Maybe<ShopifyPage>;
   allShopifyPage: ShopifyPageConnection;
   shopifyBlog?: Maybe<ShopifyBlog>;
@@ -1747,6 +1748,30 @@ export type QueryAllGraphQlSourceArgs = {
 };
 
 
+export type QueryShopifyCollectionArgs = {
+  id?: Maybe<StringQueryOperatorInput>;
+  parent?: Maybe<NodeFilterInput>;
+  children?: Maybe<NodeFilterListInput>;
+  internal?: Maybe<InternalFilterInput>;
+  description?: Maybe<StringQueryOperatorInput>;
+  descriptionHtml?: Maybe<StringQueryOperatorInput>;
+  handle?: Maybe<StringQueryOperatorInput>;
+  image?: Maybe<ShopifyCollectionImageFilterInput>;
+  title?: Maybe<StringQueryOperatorInput>;
+  updatedAt?: Maybe<DateQueryOperatorInput>;
+  shopifyId?: Maybe<StringQueryOperatorInput>;
+  products?: Maybe<ShopifyProductFilterListInput>;
+};
+
+
+export type QueryAllShopifyCollectionArgs = {
+  filter?: Maybe<ShopifyCollectionFilterInput>;
+  sort?: Maybe<ShopifyCollectionSortInput>;
+  skip?: Maybe<Scalars['Int']>;
+  limit?: Maybe<Scalars['Int']>;
+};
+
+
 export type QueryShopifyProductOptionArgs = {
   id?: Maybe<StringQueryOperatorInput>;
   parent?: Maybe<NodeFilterInput>;
@@ -1823,30 +1848,6 @@ export type QueryShopifyProductArgs = {
 export type QueryAllShopifyProductArgs = {
   filter?: Maybe<ShopifyProductFilterInput>;
   sort?: Maybe<ShopifyProductSortInput>;
-  skip?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
-};
-
-
-export type QueryShopifyCollectionArgs = {
-  id?: Maybe<StringQueryOperatorInput>;
-  parent?: Maybe<NodeFilterInput>;
-  children?: Maybe<NodeFilterListInput>;
-  internal?: Maybe<InternalFilterInput>;
-  description?: Maybe<StringQueryOperatorInput>;
-  descriptionHtml?: Maybe<StringQueryOperatorInput>;
-  handle?: Maybe<StringQueryOperatorInput>;
-  image?: Maybe<ShopifyCollectionImageFilterInput>;
-  title?: Maybe<StringQueryOperatorInput>;
-  updatedAt?: Maybe<DateQueryOperatorInput>;
-  shopifyId?: Maybe<StringQueryOperatorInput>;
-  products?: Maybe<ShopifyProductFilterListInput>;
-};
-
-
-export type QueryAllShopifyCollectionArgs = {
-  filter?: Maybe<ShopifyCollectionFilterInput>;
-  sort?: Maybe<ShopifyCollectionSortInput>;
   skip?: Maybe<Scalars['Int']>;
   limit?: Maybe<Scalars['Int']>;
 };
@@ -2806,7 +2807,7 @@ export type Shopify_CheckoutEmailUpdateV2Payload = {
   userErrors: Array<Shopify_UserError>;
 };
 
-/** Possible error codes that could be returned by a checkout mutation. */
+/** Possible error codes that could be returned by CheckoutUserError. */
 export enum Shopify_CheckoutErrorCode {
   /** Input value is blank. */
   Blank = 'BLANK',
@@ -4335,7 +4336,7 @@ export type Shopify_CustomerDefaultAddressUpdatePayload = {
   userErrors: Array<Shopify_UserError>;
 };
 
-/** Possible error codes that could be returned by a customer mutation. */
+/** Possible error codes that could be returned by CustomerUserError. */
 export enum Shopify_CustomerErrorCode {
   /** Input value is blank. */
   Blank = 'BLANK',
@@ -9063,6 +9064,7 @@ export type CollectionQueryQuery = (
     )> }
   )>, placeholderImage?: Maybe<(
     { __typename?: 'File' }
+    & Pick<File, 'absolutePath'>
     & { childImageSharp?: Maybe<(
       { __typename?: 'ImageSharp' }
       & { fluid?: Maybe<(
@@ -9088,18 +9090,7 @@ export type CollectionQueryQuery = (
       )> }
     )>>>, image?: Maybe<(
       { __typename?: 'ShopifyCollectionImage' }
-      & Pick<ShopifyCollectionImage, 'id'>
-      & { localFile?: Maybe<(
-        { __typename?: 'File' }
-        & Pick<File, 'url'>
-        & { childImageSharp?: Maybe<(
-          { __typename?: 'ImageSharp' }
-          & { fluid?: Maybe<(
-            { __typename?: 'ImageSharpFluid' }
-            & GatsbyImageSharpFluid_WithWebpFragment
-          )> }
-        )> }
-      )> }
+      & Pick<ShopifyCollectionImage, 'src'>
     )> }
   )> }
 );

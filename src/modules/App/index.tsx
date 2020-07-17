@@ -18,7 +18,13 @@ import {
 import moment from "moment";
 import gql from "graphql-tag";
 
-class App extends Component {
+interface State {}
+
+interface Props {
+  children: React.ReactNode;
+}
+
+class App extends Component<Props, State> {
   state = {
     customer: {
       ...defaultCustomerContext,
