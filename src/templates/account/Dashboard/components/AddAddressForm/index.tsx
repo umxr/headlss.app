@@ -19,7 +19,7 @@ interface Props {
 const AddAddressForm = ({ onSubmit, onCancel }: Props) => {
   const toast = useToast();
   const { customerAccessToken } = useContext(CustomerContext);
-  const [customerAddressCreate, { loading, error }] = useMutation(
+  const [customerAddressCreate, { loading }] = useMutation(
     CUSTOMER_ADDRESS_CREATE
   );
 

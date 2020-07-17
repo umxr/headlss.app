@@ -11,6 +11,8 @@ export const defaultCustomerContext = {
   setExpiry: (expiry: string) => {},
   deleteExpiry: () => {},
   checkExpiry: () => {},
+  logout: () => {},
+  deleteCustomerInstance: () => {},
 };
 
 export const CustomerContext = createContext(defaultCustomerContext);
