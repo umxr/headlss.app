@@ -13,6 +13,7 @@ import {
   AlertTitle,
   AlertDescription,
   useToast,
+  PropsOf,
 } from "@chakra-ui/core";
 import { useQuery, useMutation } from "react-apollo";
 import { CUSTOMER_ADDRESSES } from "../../queries/customerAddresses";
@@ -27,13 +28,12 @@ import { CUSTOMER_DEFUALT_ADDRESS_UPDATE } from "../../mutations/customerDefault
 import EditAddressForm from "../EditAddressForm";
 import mapAddressToFormValues from "../../utils/mapAddressToFormValues";
 
-import { FormValues } from "../EditAddressForm/types";
-
-const DashboardAddress = (props) => {
+const DashboardAddress = (props: PropsOf<typeof Box>) => {
   const toast = useToast();
-  const [selectedAddress, setSelectedAddress] = useState<FormValues | null>(
-    null
-  );
+  const [
+    selectedAddress,
+    setSelectedAddress,
+  ] = useState<Shopify_MailingAddress | null>(null);
   const [view, setView] = useState<string>("read");
   const { customerAccessToken } = useContext(CustomerContext);
   const [customerAddressDelete] = useMutation(CUSTOMER_ADDRESS_DELETE);
@@ -51,13 +51,13 @@ const DashboardAddress = (props) => {
     },
   });
 
-  const onSubmit = (view: string) => {
-    setView(view);
+  const onSubmit = () => {
+    setView("read");
     refetch();
   };
 
-  const onCancel = (view: string) => {
-    setView(view);
+  const onCancel = () => {
+    setView("read");
   };
 
   const onEdit = (address: Shopify_MailingAddress) => {
@@ -158,7 +158,7 @@ const DashboardAddress = (props) => {
 
   if (!addressesData && addressError) {
     return (
-      <Alert status="error">
+      <Alert __css={{}} status="error">
         <AlertIcon />
         <AlertTitle mr={2}>Error!</AlertTitle>
         <AlertDescription>{addressError.message}</AlertDescription>
