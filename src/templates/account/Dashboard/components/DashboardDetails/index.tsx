@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import PhoneInput, { parsePhoneNumber } from "react-phone-number-input";
 import { PhoneNumberUtil } from "google-libphonenumber";
+import PhoneInput, { parsePhoneNumber } from "react-phone-number-input";
 import { useQuery, useMutation } from "react-apollo";
 import { Box, Heading } from "@chakra-ui/core";
 import { CUSTOMER_REQUEST } from "../../queries/customerRequest";
@@ -66,7 +67,6 @@ const DashboardDetails = (props: PropsOf<typeof Box>) => {
   }, [data]);
 
   const handleUpdate = () => {
-    formatPhone(phone);
     customerUpdate({
       variables: {
         customerAccessToken,
