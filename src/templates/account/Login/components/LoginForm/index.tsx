@@ -1,7 +1,7 @@
 import React from "react";
 import { Formik, Form, FormikHelpers } from "formik";
 import { useMutation } from "@apollo/react-hooks";
-import { Button, Box, Flex, Heading, Stack, useToast } from "@chakra-ui/core";
+import { Button, Box, Divider, Heading, Stack, useToast } from "@chakra-ui/core";
 
 import validate from "./validate";
 import { INITIAL_VALUES } from "./constants";
@@ -98,49 +98,40 @@ const LoginForm = () => {
   };
 
   return (
-    <Flex
-      align="center"
-      justify="center"
-      height="100%"
+    <Stack
+      padding={4}
+      borderWidth="1px"
+      borderRadius="lg"
+      overflow="hidden"
       width="100%"
-      flexDirection="column"
-      flex={1}
+      spacing={3}
+      as={Box}
     >
-      <Stack
-        maxW="lg"
-        padding={4}
-        borderWidth="1px"
-        borderRadius="lg"
-        overflow="hidden"
-        width="100%"
-        spacing={3}
-        as={Box}
+      <Heading as="h1" size="lg">
+        Login
+      </Heading>
+      <Divider />
+      <Formik
+        validate={validate}
+        initialValues={INITIAL_VALUES}
+        onSubmit={handleSubmit}
       >
-        <Heading as="h1" size="lg">
-          Login
-        </Heading>
-        <Formik
-          validate={validate}
-          initialValues={INITIAL_VALUES}
-          onSubmit={handleSubmit}
-        >
-          {() => (
-            <Form>
-              <Email name="email" label="Email" placeholder="Email" />
-              <Password name="password" label="Password" />
-              <Button
-                mt={4}
-                variantColor="teal"
-                isLoading={loading}
-                type="submit"
-              >
-                Login
-              </Button>
-            </Form>
-          )}
-        </Formik>
-      </Stack>
-    </Flex>
+        {() => (
+          <Form>
+            <Email name="email" label="Email" placeholder="Email" />
+            <Password name="password" label="Password" />
+            <Button
+              mt={4}
+              variantColor="teal"
+              isLoading={loading}
+              type="submit"
+            >
+              Login
+            </Button>
+          </Form>
+        )}
+      </Formik>
+    </Stack>
   );
 };
 

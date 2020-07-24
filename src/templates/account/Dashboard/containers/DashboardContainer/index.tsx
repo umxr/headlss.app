@@ -1,7 +1,8 @@
 import React from "react";
+import { SimpleGrid } from "@chakra-ui/core";
+
 import Layout from "../../../../../modules/Layout";
 import DashboardDetails from "../../components/DashboardDetails";
-import { Flex, Box, SimpleGrid } from "@chakra-ui/core";
 import DashboardPreferences from "../../components/DashboardPreferences";
 import DashboardAddress from "../../components/DashboardAddress";
 
