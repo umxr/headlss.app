@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import PhoneInput, { parsePhoneNumber } from "react-phone-number-input";
-import { PhoneNumberFormat, PhoneNumberUtil } from "google-libphonenumber";
 import { useQuery, useMutation } from "react-apollo";
 import { Box, Heading } from "@chakra-ui/core";
 import { CUSTOMER_REQUEST } from "../../queries/customerRequest";
@@ -26,8 +25,6 @@ import { FaEdit, FaCheck } from "react-icons/all";
 import { CUSTOMER_UPDATE } from "../../mutations/customerUpdate";
 import { PropsOf } from "@chakra-ui/system";
 import "react-phone-number-input/style.css";
-
-const phoneUtil = PhoneNumberUtil.getInstance();
 
 const DashboardDetails = (props: PropsOf<typeof Box>) => {
   const toast = useToast();
@@ -66,8 +63,6 @@ const DashboardDetails = (props: PropsOf<typeof Box>) => {
   }, [data]);
 
   const handleUpdate = () => {
-    formatPhone(phone);
-    return false;
     customerUpdate({
       variables: {
         customerAccessToken,
@@ -131,7 +126,7 @@ const DashboardDetails = (props: PropsOf<typeof Box>) => {
   }
 
   return (
-    <Box borderWidth="1px" borderRadius="lg" {...props}>
+    <Box width="100%" borderWidth="1px" borderRadius="lg" {...props}>
       <Box p={4}>
         <Heading as="h2" size="md" mb={4}>
           Personal Details

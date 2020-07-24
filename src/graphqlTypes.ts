@@ -13,7 +13,6 @@ export type Scalars = {
    * An RFC 3986 and RFC 3987 compliant URI string.
    * 
    * Example value: `"https://johns-apparel.myshopify.com"`.
-   * 
    */
   Shopify_URL: any;
   /** A string containing HTML code. Example value: `"<p>Grey cotton knit sweater.</p>"`. */
@@ -9065,13 +9064,6 @@ export type CollectionQueryQuery = (
   )>, placeholderImage?: Maybe<(
     { __typename?: 'File' }
     & Pick<File, 'absolutePath'>
-    & { childImageSharp?: Maybe<(
-      { __typename?: 'ImageSharp' }
-      & { fluid?: Maybe<(
-        { __typename?: 'ImageSharpFluid' }
-        & GatsbyImageSharpFluidFragment
-      )> }
-    )> }
   )>, shopifyCollection?: Maybe<(
     { __typename?: 'ShopifyCollection' }
     & Pick<ShopifyCollection, 'handle' | 'description' | 'title'>
@@ -9110,13 +9102,7 @@ export type ProductQueryQuery = (
     )> }
   )>, placeholderImage?: Maybe<(
     { __typename?: 'File' }
-    & { childImageSharp?: Maybe<(
-      { __typename?: 'ImageSharp' }
-      & { fluid?: Maybe<(
-        { __typename?: 'ImageSharpFluid' }
-        & GatsbyImageSharpFluidFragment
-      )> }
-    )> }
+    & Pick<File, 'absolutePath'>
   )>, shopifyProduct?: Maybe<(
     { __typename?: 'ShopifyProduct' }
     & Pick<ShopifyProduct, 'shopifyId' | 'id' | 'title' | 'handle' | 'description' | 'productType' | 'tags'>
@@ -9138,18 +9124,7 @@ export type ProductQueryQuery = (
       )>>> }
     )>>>, images?: Maybe<Array<Maybe<(
       { __typename?: 'ShopifyProductImages' }
-      & Pick<ShopifyProductImages, 'id' | 'altText'>
-      & { localFile?: Maybe<(
-        { __typename?: 'File' }
-        & Pick<File, 'url'>
-        & { childImageSharp?: Maybe<(
-          { __typename?: 'ImageSharp' }
-          & { fluid?: Maybe<(
-            { __typename?: 'ImageSharpFluid' }
-            & GatsbyImageSharpFluid_WithWebpFragment
-          )> }
-        )> }
-      )> }
+      & Pick<ShopifyProductImages, 'altText' | 'originalSrc'>
     )>>> }
   )> }
 );

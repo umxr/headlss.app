@@ -28,7 +28,6 @@ const EditAddressForm = ({ onSubmit, onCancel, selectedAddress }: Props) => {
   useEffect(() => {
     if (selectedAddress) {
       const address = mapAddressToFormState(selectedAddress);
-
       setFormState(address);
     }
   }, [selectedAddress]);

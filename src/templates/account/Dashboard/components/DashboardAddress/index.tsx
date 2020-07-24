@@ -167,7 +167,7 @@ const DashboardAddress = (props: PropsOf<typeof Box>) => {
   }
 
   return (
-    <Box borderWidth="1px" borderRadius="lg" {...props}>
+    <Box width="100%" borderWidth="1px" borderRadius="lg" {...props}>
       <Box p={4}>
         <Heading as="h2" size="md" mb={4}>
           Address

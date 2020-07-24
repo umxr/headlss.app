@@ -1,8 +1,8 @@
 import React from "react";
 import ResetPassword from "./containers/ResetPasswordContainer";
 
-const ResetPasswordContainer = (props) => {
-  return <ResetPassword {...props} />;
+const ResetPasswordContainer = () => {
+  return <ResetPassword />;
 };
 
 export default ResetPasswordContainer;
