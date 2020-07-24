@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import PhoneInput, { parsePhoneNumber } from "react-phone-number-input";
+import PhoneInput, { parsePhoneNumber } from "react-phone-number-input";
 import { useQuery, useMutation } from "react-apollo";
 import { Box, Heading } from "@chakra-ui/core";
 import { CUSTOMER_REQUEST } from "../../queries/customerRequest";
