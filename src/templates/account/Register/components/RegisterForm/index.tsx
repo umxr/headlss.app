@@ -1,5 +1,12 @@
 import React from "react";
-import { Box, Button, Flex, Heading, Stack, useToast } from "@chakra-ui/core";
+import {
+  Box,
+  Button,
+  Divider,
+  Heading,
+  Stack,
+  useToast,
+} from "@chakra-ui/core";
 import { useMutation } from "@apollo/react-hooks";
 import { Form, Formik } from "formik";
 import validate from "./validate";
@@ -54,51 +61,42 @@ const RegisterForm = () => {
   };
 
   return (
-    <Flex
-      align="center"
-      justify="center"
-      height="100%"
+    <Stack
+      padding={4}
+      borderWidth="1px"
+      borderRadius="lg"
+      overflow="hidden"
       width="100%"
-      flexDirection="column"
-      flex={1}
+      spacing={3}
+      as={Box}
     >
-      <Stack
-        maxW="lg"
-        padding={4}
-        borderWidth="1px"
-        borderRadius="lg"
-        overflow="hidden"
-        width="100%"
-        spacing={3}
-        as={Box}
+      <Heading as="h1" size="lg">
+        Register
+      </Heading>
+      <Divider />
+      <Formik
+        validate={validate}
+        initialValues={INITIAL_VALUES}
+        onSubmit={handleSubmit}
       >
-        <Heading as="h1" size="lg">
-          Register
-        </Heading>
-        <Formik
-          validate={validate}
-          initialValues={INITIAL_VALUES}
-          onSubmit={handleSubmit}
-        >
-          {() => (
-            <Form>
-              <Text name="firstName" label="First Name" />
-              <Text name="lastName" label="Last Name" />
-              <Email name="email" label="Email" placeholder="Email" />
-              <Password name="password" label="Password" />
-              <Button
-                mt={4}
-                variantColor="teal"
-                isLoading={loading}
-                type="submit"
-              >
-                Login
-              </Button>
-            </Form>
-          )}
-        </Formik>
-      </Stack>
-    </Flex>
+        {() => (
+          <Form>
+            <Text name="firstName" label="First Name" />
+            <Text name="lastName" label="Last Name" />
+            <Email name="email" label="Email" placeholder="Email" />
+            <Password name="password" label="Password" />
+            <Button
+              mt={4}
+              variantColor="teal"
+              isLoading={loading}
+              type="submit"
+            >
+              Login
+            </Button>
+          </Form>
+        )}
+      </Formik>
+    </Stack>
   );
 };
 

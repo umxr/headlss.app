@@ -1,11 +1,54 @@
 import React from "react";
+import {
+  Box,
+  Divider,
+  Heading,
+  SimpleGrid,
+  Stack,
+  Text,
+} from "@chakra-ui/core";
 import Layout from "../../../../../modules/Layout";
 import RegisterForm from "../../components/RegisterForm";
+import { Link as GatsbyLink } from "gatsby";
 
 const RegisterContainer = () => {
   return (
     <Layout>
-      <RegisterForm />
+      <SimpleGrid
+        p={6}
+        columns={{
+          md: 1,
+          lg: 2,
+        }}
+        spacing={6}
+      >
+        <RegisterForm />
+        <Stack
+          padding={4}
+          borderWidth="1px"
+          borderRadius="lg"
+          overflow="hidden"
+          width="100%"
+          spacing={3}
+          as={Box}
+        >
+          <Heading as="h1" size="lg">
+            Already have an account?
+          </Heading>
+          <Divider />
+          <Text fontSize="sm">
+            Login Click{" "}
+            <GatsbyLink
+              to={"/account/login"}
+              style={{
+                textDecoration: "underline",
+              }}
+            >
+              here
+            </GatsbyLink>
+          </Text>
+        </Stack>
+      </SimpleGrid>
     </Layout>
   );
 };
