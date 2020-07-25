@@ -29,7 +29,7 @@ const Authentication = ({ children }: Props) => {
     );
   }
 
-  return children;
+  return <>{children}</>;
 };
 
 export default Authentication;

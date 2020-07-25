@@ -9011,6 +9011,10 @@ export type CollectionsQueryQuery = (
       & { node: (
         { __typename?: 'ShopifyCollection' }
         & Pick<ShopifyCollection, 'title' | 'handle' | 'id'>
+        & { image?: Maybe<(
+          { __typename?: 'ShopifyCollectionImage' }
+          & Pick<ShopifyCollectionImage, 'src'>
+        )> }
       ) }
     )> }
   ) }

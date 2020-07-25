@@ -1,13 +1,17 @@
 import React from "react";
-import {graphql, Link} from "gatsby";
+import { graphql, Link } from "gatsby";
+import { Helmet } from "react-helmet";
+import { SimpleGrid } from "@chakra-ui/core";
+
+import Layout from "../modules/Layout";
+
 import {
   QueryImageSharpArgs,
   ShopifyCollection,
   ShopifyCollectionEdge,
   Site,
 } from "../graphqlTypes";
-import Layout from "../modules/Layout";
-import { Helmet } from "react-helmet";
+import CollectionsList from "../components/pages/Collections/CollectionsList";
 
 interface ChildImageSharp {
   childImageSharp: QueryImageSharpArgs;
@@ -61,15 +65,16 @@ const Collections = (props: Props) => {
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:site" content="@Statement" />
       </Helmet>
-      <ul>
-        {allShopifyCollection.edges.map((edge: ShopifyCollectionEdge) => {
-          return <li key={edge.node.id}>
-            <Link to={`/collections/${edge.node.handle}`}>
-              {edge.node.title}
-            </Link>
-          </li>
-        })}
-      </ul>
+      <SimpleGrid
+        p={6}
+        columns={{
+          md: 1,
+          lg: 2,
+          xl: 3,
+        }}
+      >
+        <CollectionsList collections={allShopifyCollection.edges} />
+      </SimpleGrid>
     </Layout>
   );
 };
@@ -95,6 +100,9 @@ export const query = graphql`
     allShopifyCollection {
       edges {
         node {
+          image {
+            src
+          }
           title
           handle
           id
