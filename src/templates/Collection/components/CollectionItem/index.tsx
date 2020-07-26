@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { navigate } from "gatsby";
 import { Box, Image, AspectRatio, Button, useToast } from "@chakra-ui/core";
 
 import formatMoney from "../../../../utils/formatMoney";
 import { ShopifyProduct } from "../../../../graphqlTypes";
 import { StoreContext } from "../../../../config/context/createStoreContext";
+import { useDispatch } from "react-redux";
+import { closeDrawer, openDrawer } from "../../../../reducers/drawer/actions";
 
 interface Props {
   product: ShopifyProduct;
@@ -12,6 +14,9 @@ interface Props {
 
 const CollectionItem = ({ product }: Props) => {
   const toast = useToast();
+  const dispatch = useDispatch();
+  const { adding } = useContext(StoreContext);
+
   const handleNavigation = async () => {
     await navigate(`/products/${product.handle}`);
   };
@@ -53,7 +58,7 @@ const CollectionItem = ({ product }: Props) => {
       <Box mt={3} px={6} pb={6} textAlign="center">
         <StoreContext.Consumer>
           {({ addVariantToCart }) => {
-            const onSuccess = () =>
+            const onSuccess = () => {
               toast({
                 title: "Success.",
                 description: "Added to cart.",
@@ -61,6 +66,11 @@ const CollectionItem = ({ product }: Props) => {
                 duration: 2500,
                 isClosable: true,
               });
+              dispatch(openDrawer());
+              setTimeout(() => {
+                dispatch(closeDrawer());
+              }, 2500);
+            };
 
             const onError = (error) =>
               toast({
@@ -73,6 +83,7 @@ const CollectionItem = ({ product }: Props) => {
 
             return (
               <Button
+                isLoading={adding}
                 onClick={() =>
                   addVariantToCart(
                     {

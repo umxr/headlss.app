@@ -262,40 +262,74 @@ class App extends Component<Props, State> {
           });
       },
       removeLineItem: (
-        client: Client,
-        checkoutID: string,
-        lineItemID: string
+        { lineItemId }: { lineItemId: string },
+        onSuccess?: () => void,
+        onError?: () => void
       ) => {
+        const { checkout, client } = this.state.store;
+        const checkoutId = checkout.id;
+
         return client.checkout
-          .removeLineItems(checkoutID, [lineItemID])
+          .removeLineItems(checkoutId, [lineItemId])
           .then((res) => {
-            this.setState((state) => ({
-              store: {
-                ...state.store,
-                checkout: res,
-              },
-            }));
+            this.setState(
+              (state) => ({
+                store: {
+                  ...state.store,
+                  checkout: res,
+                },
+              }),
+              () => {
+                if (onSuccess) {
+                  onSuccess();
+                }
+              }
+            );
+          })
+          .catch((e) => {
+            if (onError) {
+              onError(e);
+            }
           });
       },
       updateLineItem: (
-        client: Client,
-        checkoutID: string,
-        lineItemID: string,
-        quantity: number
+        {
+          lineItemId,
+          quantity,
+        }: {
+          lineItemId: string;
+          quantity: number;
+        },
+        onSuccess?: () => void,
+        onError?: () => void
       ) => {
-        const lineItemsToUpdate = [
-          { id: lineItemID, quantity: parseInt(String(quantity), 10) },
-        ];
+        const { checkout, client } = this.state.store;
+        const checkoutId = checkout.id;
+
+        const lineItemsToUpdate = [{ id: lineItemId, quantity }];
 
         return client.checkout
-          .updateLineItems(checkoutID, lineItemsToUpdate)
+          .updateLineItems(checkoutId, lineItemsToUpdate)
           .then((res) => {
-            this.setState((state) => ({
-              store: {
-                ...state.store,
-                checkout: res,
-              },
-            }));
+            this.setState(
+              (state) => ({
+                store: {
+                  ...state.store,
+                  checkout: res,
+                },
+              }),
+              () => {
+                if (onSuccess) {
+                  onSuccess();
+                }
+              }
+            );
+          })
+          .catch((e) => {
+            console.log(e);
+            if (onError) {
+              onError();
+            }
           });
       },
     },

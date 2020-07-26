@@ -1,4 +1,4 @@
-import React, { forwardRef, useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Button,
   Drawer as CDrawer,
@@ -15,47 +15,94 @@ import {
 import { SlideProps } from "@chakra-ui/transition";
 import { Link } from "gatsby";
 import { StoreContext } from "../../config/context/createStoreContext";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../config/redux/createRootReducer";
+import { closeDrawer } from "../../reducers/drawer/actions";
+import DrawerEmpty from "./components/DrawerEmpty";
+import DrawerItems from "./components/DrawerItems";
 
 interface Props {
-  isOpen: boolean;
-  onClose: () => void;
   placement: SlideProps["placement"];
-  children: React.ReactNode;
   title?: string;
 }
 
-const Drawer = React.forwardRef<React.RefObject<HTMLElement>, Props>(
-  ({ isOpen, onClose, placement = "right", children, title }, ref) => {
-    const { checkout } = useContext(StoreContext);
-    const [loading, setLoading] = useState<boolean>(true);
-    return (
-      <CDrawer
-        isOpen={isOpen}
-        placement={placement}
-        onClose={onClose}
-        finalFocusRef={ref}
-      >
-        <CDrawerOverlay />
-        <CDrawerContent>
-          <CDrawerCloseButton />
-          {title && <CDrawerHeader>{title}</CDrawerHeader>}
+const Drawer = ({ placement = "right", title }: Props) => {
+  const dispatch = useDispatch();
+  const { checkout } = useContext(StoreContext);
+  const isOpen = useSelector((state: RootState) => state.drawer.isOpen);
 
-          <CDrawerBody>{children}</CDrawerBody>
+  const onClose = () => dispatch(closeDrawer());
 
-          <CDrawerFooter>
-            <Stack spacing={4} width="100%">
-              <Button as={Link} to="/cart">
-                View Cart
-              </Button>
-              <Button as={CLink} href={checkout.webUrl} isExternal>
-                Continue to Checkout
-              </Button>
-            </Stack>
-          </CDrawerFooter>
-        </CDrawerContent>
-      </CDrawer>
-    );
-  }
-);
+  console.log(checkout);
+
+  return (
+    <CDrawer isOpen={isOpen} placement={placement} onClose={onClose}>
+      <CDrawerOverlay />
+      <CDrawerContent>
+        <CDrawerCloseButton />
+        {title && <CDrawerHeader>{title}</CDrawerHeader>}
+        <CDrawerBody>
+          <StoreContext.Consumer>
+            {({ checkout, updateLineItem, removeLineItem }) => {
+              const isCartEmpty = checkout.lineItems.length === 0;
+
+              const updateItem = (
+                lineItemId: string,
+                quantity: number,
+                onSuccess?: () => void,
+                onError?: () => void
+              ) => {
+                updateLineItem(
+                  {
+                    lineItemId,
+                    quantity,
+                  },
+                  onSuccess,
+                  onError
+                );
+              };
+
+              const removeItem = (
+                lineItemId: string,
+                onSuccess?: () => void,
+                onError?: () => void
+              ) => {
+                removeLineItem(
+                  {
+                    lineItemId,
+                  },
+                  onSuccess,
+                  onError
+                );
+              };
+
+              if (isCartEmpty) {
+                return <DrawerEmpty />;
+              }
+
+              return (
+                <DrawerItems
+                  items={checkout.lineItems}
+                  onUpdate={updateItem}
+                  onRemove={removeItem}
+                />
+              );
+            }}
+          </StoreContext.Consumer>
+        </CDrawerBody>
+        <CDrawerFooter>
+          <Stack spacing={4} width="100%">
+            <Button as={Link} to="/cart">
+              View Cart
+            </Button>
+            <Button as={CLink} href={checkout.webUrl} isExternal>
+              Continue to Checkout
+            </Button>
+          </Stack>
+        </CDrawerFooter>
+      </CDrawerContent>
+    </CDrawer>
+  );
+};
 
 export default Drawer;
