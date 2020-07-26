@@ -1,15 +1,17 @@
 import React from "react";
-import { graphql } from "gatsby";
+import { graphql, Link } from "gatsby";
+import { Helmet } from "react-helmet";
+import { SimpleGrid } from "@chakra-ui/core";
+
+import Layout from "../modules/Layout";
+
 import {
   QueryImageSharpArgs,
   ShopifyCollection,
   ShopifyCollectionEdge,
   Site,
 } from "../graphqlTypes";
-import Layout from "../modules/Layout";
-import { Helmet } from "react-helmet";
 import CollectionsList from "../components/pages/Collections/CollectionsList";
-import { SimpleGrid } from "@chakra-ui/core";
 
 interface ChildImageSharp {
   childImageSharp: QueryImageSharpArgs;
@@ -70,6 +72,7 @@ const Products = (props: Props) => {
           lg: 2,
           xl: 3,
         }}
+        spacing={6}
       >
         <CollectionsList collections={allShopifyCollection.edges} />
       </SimpleGrid>
@@ -98,6 +101,9 @@ export const query = graphql`
     allShopifyCollection {
       edges {
         node {
+          image {
+            src
+          }
           title
           handle
           id

@@ -8,7 +8,7 @@ const path = require("path");
 
 const templates = {
   ShopifyProduct: path.resolve("./src/templates/product.tsx"),
-  ShopifyCollection: path.resolve("./src/templates/collection.tsx"),
+  ShopifyCollection: path.resolve("./src/templates/Collection/containers/CollectionContainer/index.tsx"),
   Login: path.resolve("./src/templates/account/Login/index.tsx"),
   Register: path.resolve("./src/templates/account/Register/index.tsx"),
   ForgotPassword: path.resolve("./src/templates/account/ForgotPassword/index.tsx"),

@@ -20,6 +20,7 @@
     "@emotion/core": "^10.0.28",
     "@emotion/styled": "^10.0.27",
     "@graphql-codegen/typescript-operations": "^1.16.0",
+    "@shopify/theme-currency": "^4.0.0",
     "@types/google-libphonenumber": "^7.4.19",
     "@types/isomorphic-fetch": "^0.0.35",
     "@types/react-helmet": "^6.0.0",

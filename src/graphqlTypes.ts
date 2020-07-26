@@ -13,6 +13,7 @@ export type Scalars = {
    * An RFC 3986 and RFC 3987 compliant URI string.
    * 
    * Example value: `"https://johns-apparel.myshopify.com"`.
+   * 
    */
   Shopify_URL: any;
   /** A string containing HTML code. Example value: `"<p>Grey cotton knit sweater.</p>"`. */
@@ -1546,10 +1547,10 @@ export type Query = {
   allShopifyProductVariant: ShopifyProductVariantConnection;
   shopifyProduct?: Maybe<ShopifyProduct>;
   allShopifyProduct: ShopifyProductConnection;
-  shopifyPage?: Maybe<ShopifyPage>;
-  allShopifyPage: ShopifyPageConnection;
   shopifyBlog?: Maybe<ShopifyBlog>;
   allShopifyBlog: ShopifyBlogConnection;
+  shopifyPage?: Maybe<ShopifyPage>;
+  allShopifyPage: ShopifyPageConnection;
   siteBuildMetadata?: Maybe<SiteBuildMetadata>;
   allSiteBuildMetadata: SiteBuildMetadataConnection;
   sitePlugin?: Maybe<SitePlugin>;
@@ -1852,6 +1853,26 @@ export type QueryAllShopifyProductArgs = {
 };
 
 
+export type QueryShopifyBlogArgs = {
+  id?: Maybe<StringQueryOperatorInput>;
+  parent?: Maybe<NodeFilterInput>;
+  children?: Maybe<NodeFilterListInput>;
+  internal?: Maybe<InternalFilterInput>;
+  handle?: Maybe<StringQueryOperatorInput>;
+  title?: Maybe<StringQueryOperatorInput>;
+  url?: Maybe<StringQueryOperatorInput>;
+  shopifyId?: Maybe<StringQueryOperatorInput>;
+};
+
+
+export type QueryAllShopifyBlogArgs = {
+  filter?: Maybe<ShopifyBlogFilterInput>;
+  sort?: Maybe<ShopifyBlogSortInput>;
+  skip?: Maybe<Scalars['Int']>;
+  limit?: Maybe<Scalars['Int']>;
+};
+
+
 export type QueryShopifyPageArgs = {
   id?: Maybe<StringQueryOperatorInput>;
   parent?: Maybe<NodeFilterInput>;
@@ -1870,26 +1891,6 @@ export type QueryShopifyPageArgs = {
 export type QueryAllShopifyPageArgs = {
   filter?: Maybe<ShopifyPageFilterInput>;
   sort?: Maybe<ShopifyPageSortInput>;
-  skip?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
-};
-
-
-export type QueryShopifyBlogArgs = {
-  id?: Maybe<StringQueryOperatorInput>;
-  parent?: Maybe<NodeFilterInput>;
-  children?: Maybe<NodeFilterListInput>;
-  internal?: Maybe<InternalFilterInput>;
-  handle?: Maybe<StringQueryOperatorInput>;
-  title?: Maybe<StringQueryOperatorInput>;
-  url?: Maybe<StringQueryOperatorInput>;
-  shopifyId?: Maybe<StringQueryOperatorInput>;
-};
-
-
-export type QueryAllShopifyBlogArgs = {
-  filter?: Maybe<ShopifyBlogFilterInput>;
-  sort?: Maybe<ShopifyBlogSortInput>;
   skip?: Maybe<Scalars['Int']>;
   limit?: Maybe<Scalars['Int']>;
 };
@@ -9047,48 +9048,13 @@ export type ProductsQueryQuery = (
       & { node: (
         { __typename?: 'ShopifyCollection' }
         & Pick<ShopifyCollection, 'title' | 'handle' | 'id'>
+        & { image?: Maybe<(
+          { __typename?: 'ShopifyCollectionImage' }
+          & Pick<ShopifyCollectionImage, 'src'>
+        )> }
       ) }
     )> }
   ) }
-);
-
-export type CollectionQueryQueryVariables = Exact<{
-  handle: Scalars['String'];
-}>;
-
-
-export type CollectionQueryQuery = (
-  { __typename?: 'Query' }
-  & { site?: Maybe<(
-    { __typename?: 'Site' }
-    & { siteMetadata?: Maybe<(
-      { __typename?: 'SiteSiteMetadata' }
-      & Pick<SiteSiteMetadata, 'siteUrl' | 'title' | 'description'>
-    )> }
-  )>, placeholderImage?: Maybe<(
-    { __typename?: 'File' }
-    & Pick<File, 'absolutePath'>
-  )>, shopifyCollection?: Maybe<(
-    { __typename?: 'ShopifyCollection' }
-    & Pick<ShopifyCollection, 'handle' | 'description' | 'title'>
-    & { products?: Maybe<Array<Maybe<(
-      { __typename?: 'ShopifyProduct' }
-      & Pick<ShopifyProduct, 'id' | 'handle' | 'title' | 'description'>
-      & { priceRange?: Maybe<(
-        { __typename?: 'ShopifyProductPriceRange' }
-        & { minVariantPrice?: Maybe<(
-          { __typename?: 'ShopifyProductPriceRangeMinVariantPrice' }
-          & Pick<ShopifyProductPriceRangeMinVariantPrice, 'amount' | 'currencyCode'>
-        )>, maxVariantPrice?: Maybe<(
-          { __typename?: 'ShopifyProductPriceRangeMaxVariantPrice' }
-          & Pick<ShopifyProductPriceRangeMaxVariantPrice, 'amount' | 'currencyCode'>
-        )> }
-      )> }
-    )>>>, image?: Maybe<(
-      { __typename?: 'ShopifyCollectionImage' }
-      & Pick<ShopifyCollectionImage, 'src'>
-    )> }
-  )> }
 );
 
 export type ProductQueryQueryVariables = Exact<{

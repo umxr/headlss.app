@@ -72,6 +72,7 @@ const Collections = (props: Props) => {
           lg: 2,
           xl: 3,
         }}
+        spacing={6}
       >
         <CollectionsList collections={allShopifyCollection.edges} />
       </SimpleGrid>

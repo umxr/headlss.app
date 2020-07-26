@@ -15,7 +15,6 @@ const CollectionsItem = ({ collection }: Props) => {
   return (
     <Box
       onClick={handleNavigation}
-      maxW="sm"
       borderWidth="1px"
       rounded="lg"
       overflow="hidden"

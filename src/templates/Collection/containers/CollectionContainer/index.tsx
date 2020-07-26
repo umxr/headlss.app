@@ -1,16 +1,13 @@
 import React from "react";
-import { graphql, Link } from "gatsby";
+import { graphql } from "gatsby";
 import { Helmet } from "react-helmet";
-import {
-  Maybe,
-  ShopifyCollection,
-  ShopifyProduct,
-  Site,
-} from "../graphqlTypes";
-import Layout from "../modules/Layout";
+import { ShopifyCollection, Site } from "../../../../graphqlTypes";
+import Layout from "../../../../modules/Layout";
+import CollectionList from "../../components/CollectionList";
+import { SimpleGrid } from "@chakra-ui/core";
 
 interface Image {
-  absolutePath: string
+  absolutePath: string;
 }
 
 interface Props {
@@ -22,7 +19,7 @@ interface Props {
   location: Location;
 }
 
-const Collection = (props: Props) => {
+const CollectionContainer = (props: Props) => {
   const {
     data: { site, shopifyCollection: collection, placeholderImage },
     location: { pathname },
@@ -37,9 +34,9 @@ const Collection = (props: Props) => {
 
   let image;
   if (collection.image && collection.image.src) {
-    image = collection.image.src
+    image = collection.image.src;
   } else {
-    image = placeholderImage.absolutePath
+    image = placeholderImage.absolutePath;
   }
 
   if (!collection.products) {
@@ -83,28 +80,30 @@ const Collection = (props: Props) => {
         <meta property="og:title" content={title} />
         <meta property="og:site_name" content="Headlss" />
         <meta property="og:description" content={description} />
-        {image && <meta property="og:image" content={image} />}
+        <meta property="og:image" content={image} />
         <meta property="og:image:alt" content={title} />
         <meta property="og:image:width" content="600" />
         <meta property="og:image:height" content="600" />
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:site" content="@Statement" />
       </Helmet>
-      <ul>
-        {collection.products.map((product: Maybe<ShopifyProduct>) => {
-          if (!product) return null;
-          return (
-            <li key={product.id}>
-              <Link to={`/products/${product.handle}`}>{product.title}</Link>
-            </li>
-          );
-        })}
-      </ul>
+      <SimpleGrid
+        p={6}
+        columns={{
+          sm: 2,
+          md: 2,
+          lg: 2,
+          xl: 3,
+        }}
+        spacing={6}
+      >
+        <CollectionList products={collection.products} />
+      </SimpleGrid>
     </Layout>
   );
 };
 
-export default Collection;
+export default CollectionContainer;
 
 export const query = graphql`
   query CollectionQuery($handle: String!) {
@@ -119,19 +118,15 @@ export const query = graphql`
       absolutePath
     }
     shopifyCollection(handle: { eq: $handle }) {
-      handle
-      description
       title
       products {
         id
         handle
         title
-        description
+        images {
+          originalSrc
+        }
         priceRange {
-          minVariantPrice {
-            amount
-            currencyCode
-          }
           maxVariantPrice {
             amount
             currencyCode
