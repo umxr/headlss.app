@@ -1,22 +1,23 @@
 import React, { Component } from "react";
 import { ChakraProvider, CSSReset } from "@chakra-ui/core";
+import moment from "moment";
+import gql from "graphql-tag";
+import { Client } from "shopify-buy";
 
 import {
   StoreContext,
   defaultStoreContext,
 } from "../../config/context/createStoreContext";
-import { Client } from "shopify-buy";
+import {
+  CustomerContext,
+  defaultCustomerContext,
+} from "../../config/context/createCustomerContext";
+
 import CustomerProvider, {
   apolloClient,
 } from "../../config/providers/createCustomerProvider";
 
 import theme from "../../theme";
-import {
-  CustomerContext,
-  defaultCustomerContext,
-} from "../../config/context/createCustomerContext";
-import moment from "moment";
-import gql from "graphql-tag";
 
 interface State {}
 
@@ -206,7 +207,17 @@ class App extends Component<Props, State> {
     },
     store: {
       ...defaultStoreContext,
-      addVariantToCart: (variantId: string, quantity: number) => {
+      addVariantToCart: (
+        {
+          variantId,
+          quantity,
+        }: {
+          variantId: string;
+          quantity: number;
+        },
+        onSuccess?: () => void,
+        onError?: () => void
+      ) => {
         if (variantId === "" || !quantity) {
           console.error("Both a size and quantity are required.");
           return;
@@ -228,13 +239,26 @@ class App extends Component<Props, State> {
         return client.checkout
           .addLineItems(checkoutId, lineItemsToUpdate)
           .then((checkout) => {
-            this.setState((state) => ({
-              store: {
-                ...state.store,
-                checkout,
-                adding: false,
-              },
-            }));
+            this.setState(
+              (state) => ({
+                store: {
+                  ...state.store,
+                  checkout,
+                  adding: false,
+                },
+              }),
+              () => {
+                if (onSuccess) {
+                  onSuccess();
+                }
+              }
+            );
+          })
+          .catch((e) => {
+            console.log(e);
+            if (onError) {
+              onError(e);
+            }
           });
       },
       removeLineItem: (

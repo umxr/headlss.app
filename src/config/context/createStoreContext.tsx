@@ -13,18 +13,9 @@ export const defaultStoreContext = {
   checkout: { lineItems: [] },
   products: [],
   shop: {},
-  addVariantToCart: (variantId: string, quantity: number) => {},
-  removeLineItem: (
-    client: ShopifyBuy.Client,
-    checkoutId: string,
-    lineItemId: string | number
-  ) => {},
-  updateLineItem: (
-    client: ShopifyBuy.Client,
-    checkoutId: string,
-    lineItemId: string | number,
-    quantity: number
-  ) => {},
+  addVariantToCart: () => {},
+  removeLineItem: () => {},
+  updateLineItem: () => {},
 };
 
 export const StoreContext = createContext(defaultStoreContext);

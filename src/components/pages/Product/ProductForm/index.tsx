@@ -57,9 +57,15 @@ class ProductForm extends Component<Props, State> {
     this.setState({ [event.currentTarget.name]: event.currentTarget.value });
   };
 
-  handleSubmit = (callback: (variantId: string, quantity: number) => void) => (
-    event: React.SyntheticEvent
-  ) => {
+  handleSubmit = (
+    callback: ({
+      variantId,
+      quantity,
+    }: {
+      variantId: string;
+      quantity: number;
+    }) => void
+  ) => (event: React.SyntheticEvent) => {
     event.preventDefault();
 
     const errors = [];
@@ -84,7 +90,10 @@ class ProductForm extends Component<Props, State> {
     }
 
     if (this.state.variant) {
-      callback(this.state.variant, this.state.quantity);
+      callback({
+        variantId: this.state.variant,
+        quantity: this.state.quantity,
+      });
     }
   };
 
@@ -95,6 +104,8 @@ class ProductForm extends Component<Props, State> {
     const hasVariants = variants && variants.length > 1;
 
     const isOutOfStock = !hasVariants && !variants[0].availableForSale;
+
+    console.log(this.state);
 
     return (
       <StoreContext.Consumer>

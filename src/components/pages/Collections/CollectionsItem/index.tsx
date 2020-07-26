@@ -16,7 +16,7 @@ const CollectionsItem = ({ collection }: Props) => {
     <Box
       onClick={handleNavigation}
       borderWidth="1px"
-      rounded="lg"
+      borderRadius="lg"
       overflow="hidden"
       cursor="pointer"
     >

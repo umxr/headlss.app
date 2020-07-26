@@ -1539,18 +1539,18 @@ export type Query = {
   allImageSharp: ImageSharpConnection;
   graphQlSource?: Maybe<GraphQlSource>;
   allGraphQlSource: GraphQlSourceConnection;
-  shopifyCollection?: Maybe<ShopifyCollection>;
-  allShopifyCollection: ShopifyCollectionConnection;
   shopifyProductOption?: Maybe<ShopifyProductOption>;
   allShopifyProductOption: ShopifyProductOptionConnection;
   shopifyProductVariant?: Maybe<ShopifyProductVariant>;
   allShopifyProductVariant: ShopifyProductVariantConnection;
   shopifyProduct?: Maybe<ShopifyProduct>;
   allShopifyProduct: ShopifyProductConnection;
-  shopifyBlog?: Maybe<ShopifyBlog>;
-  allShopifyBlog: ShopifyBlogConnection;
+  shopifyCollection?: Maybe<ShopifyCollection>;
+  allShopifyCollection: ShopifyCollectionConnection;
   shopifyPage?: Maybe<ShopifyPage>;
   allShopifyPage: ShopifyPageConnection;
+  shopifyBlog?: Maybe<ShopifyBlog>;
+  allShopifyBlog: ShopifyBlogConnection;
   siteBuildMetadata?: Maybe<SiteBuildMetadata>;
   allSiteBuildMetadata: SiteBuildMetadataConnection;
   sitePlugin?: Maybe<SitePlugin>;
@@ -1748,30 +1748,6 @@ export type QueryAllGraphQlSourceArgs = {
 };
 
 
-export type QueryShopifyCollectionArgs = {
-  id?: Maybe<StringQueryOperatorInput>;
-  parent?: Maybe<NodeFilterInput>;
-  children?: Maybe<NodeFilterListInput>;
-  internal?: Maybe<InternalFilterInput>;
-  description?: Maybe<StringQueryOperatorInput>;
-  descriptionHtml?: Maybe<StringQueryOperatorInput>;
-  handle?: Maybe<StringQueryOperatorInput>;
-  image?: Maybe<ShopifyCollectionImageFilterInput>;
-  title?: Maybe<StringQueryOperatorInput>;
-  updatedAt?: Maybe<DateQueryOperatorInput>;
-  shopifyId?: Maybe<StringQueryOperatorInput>;
-  products?: Maybe<ShopifyProductFilterListInput>;
-};
-
-
-export type QueryAllShopifyCollectionArgs = {
-  filter?: Maybe<ShopifyCollectionFilterInput>;
-  sort?: Maybe<ShopifyCollectionSortInput>;
-  skip?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
-};
-
-
 export type QueryShopifyProductOptionArgs = {
   id?: Maybe<StringQueryOperatorInput>;
   parent?: Maybe<NodeFilterInput>;
@@ -1853,21 +1829,25 @@ export type QueryAllShopifyProductArgs = {
 };
 
 
-export type QueryShopifyBlogArgs = {
+export type QueryShopifyCollectionArgs = {
   id?: Maybe<StringQueryOperatorInput>;
   parent?: Maybe<NodeFilterInput>;
   children?: Maybe<NodeFilterListInput>;
   internal?: Maybe<InternalFilterInput>;
+  description?: Maybe<StringQueryOperatorInput>;
+  descriptionHtml?: Maybe<StringQueryOperatorInput>;
   handle?: Maybe<StringQueryOperatorInput>;
+  image?: Maybe<ShopifyCollectionImageFilterInput>;
   title?: Maybe<StringQueryOperatorInput>;
-  url?: Maybe<StringQueryOperatorInput>;
+  updatedAt?: Maybe<DateQueryOperatorInput>;
   shopifyId?: Maybe<StringQueryOperatorInput>;
+  products?: Maybe<ShopifyProductFilterListInput>;
 };
 
 
-export type QueryAllShopifyBlogArgs = {
-  filter?: Maybe<ShopifyBlogFilterInput>;
-  sort?: Maybe<ShopifyBlogSortInput>;
+export type QueryAllShopifyCollectionArgs = {
+  filter?: Maybe<ShopifyCollectionFilterInput>;
+  sort?: Maybe<ShopifyCollectionSortInput>;
   skip?: Maybe<Scalars['Int']>;
   limit?: Maybe<Scalars['Int']>;
 };
@@ -1891,6 +1871,26 @@ export type QueryShopifyPageArgs = {
 export type QueryAllShopifyPageArgs = {
   filter?: Maybe<ShopifyPageFilterInput>;
   sort?: Maybe<ShopifyPageSortInput>;
+  skip?: Maybe<Scalars['Int']>;
+  limit?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryShopifyBlogArgs = {
+  id?: Maybe<StringQueryOperatorInput>;
+  parent?: Maybe<NodeFilterInput>;
+  children?: Maybe<NodeFilterListInput>;
+  internal?: Maybe<InternalFilterInput>;
+  handle?: Maybe<StringQueryOperatorInput>;
+  title?: Maybe<StringQueryOperatorInput>;
+  url?: Maybe<StringQueryOperatorInput>;
+  shopifyId?: Maybe<StringQueryOperatorInput>;
+};
+
+
+export type QueryAllShopifyBlogArgs = {
+  filter?: Maybe<ShopifyBlogFilterInput>;
+  sort?: Maybe<ShopifyBlogSortInput>;
   skip?: Maybe<Scalars['Int']>;
   limit?: Maybe<Scalars['Int']>;
 };

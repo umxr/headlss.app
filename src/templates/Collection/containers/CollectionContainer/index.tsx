@@ -1,10 +1,12 @@
 import React from "react";
 import { graphql } from "gatsby";
-import { Helmet } from "react-helmet";
-import { ShopifyCollection, Site } from "../../../../graphqlTypes";
-import Layout from "../../../../modules/Layout";
-import CollectionList from "../../components/CollectionList";
 import { SimpleGrid } from "@chakra-ui/core";
+
+import CollectionList from "../../components/CollectionList";
+import CollectionEmpty from "../../components/CollectionEmpty";
+import CollectionLayout from "../../components/CollectionLayout";
+
+import { ShopifyCollection, Site } from "../../../../graphqlTypes";
 
 interface Image {
   absolutePath: string;
@@ -41,52 +43,26 @@ const CollectionContainer = (props: Props) => {
 
   if (!collection.products) {
     return (
-      <Layout>
-        <Helmet>
-          <title>{title}</title>
-          <meta name="description" content={description} />
-          <link rel="canonical" href={canonical} />
-          <meta
-            property="og:url"
-            content={`${site.siteMetadata?.siteUrl}/product/${handle}`}
-          />
-          <meta property="og:locale" content="en" />
-          <meta property="og:title" content={title} />
-          <meta property="og:site_name" content="Headlss" />
-          <meta property="og:description" content={description} />
-          <meta property="og:image" content={image} />
-          <meta property="og:image:alt" content={title} />
-          <meta property="og:image:width" content="600" />
-          <meta property="og:image:height" content="600" />
-          <meta name="twitter:card" content="summary" />
-          <meta name="twitter:site" content="@Statement" />
-        </Helmet>
-        <div>Empty Collection</div>
-      </Layout>
+      <CollectionLayout
+        title={title}
+        description={description}
+        canonical={canonical}
+        url={`${site.siteMetadata?.siteUrl}/collections/${handle}`}
+        image={image}
+      >
+        <CollectionEmpty />;
+      </CollectionLayout>
     );
   }
 
   return (
-    <Layout>
-      <Helmet>
-        <title>{title}</title>
-        <meta name="description" content={description} />
-        <link rel="canonical" href={canonical} />
-        <meta
-          property="og:url"
-          content={`${site.siteMetadata?.siteUrl}/product/${handle}`}
-        />
-        <meta property="og:locale" content="en" />
-        <meta property="og:title" content={title} />
-        <meta property="og:site_name" content="Headlss" />
-        <meta property="og:description" content={description} />
-        <meta property="og:image" content={image} />
-        <meta property="og:image:alt" content={title} />
-        <meta property="og:image:width" content="600" />
-        <meta property="og:image:height" content="600" />
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:site" content="@Statement" />
-      </Helmet>
+    <CollectionLayout
+      title={title}
+      description={description}
+      canonical={canonical}
+      url={`${site.siteMetadata?.siteUrl}/collections/${handle}`}
+      image={image}
+    >
       <SimpleGrid
         p={6}
         columns={{
@@ -99,7 +75,7 @@ const CollectionContainer = (props: Props) => {
       >
         <CollectionList products={collection.products} />
       </SimpleGrid>
-    </Layout>
+    </CollectionLayout>
   );
 };
 
@@ -131,6 +107,9 @@ export const query = graphql`
             amount
             currencyCode
           }
+        }
+        variants {
+          shopifyId
         }
       }
       image {

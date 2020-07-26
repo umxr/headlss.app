@@ -1,15 +1,17 @@
 import React from "react";
-import * as currency from "@shopify/theme-currency";
 import { navigate } from "gatsby";
-import { ShopifyProduct } from "../../../../graphqlTypes";
-import { Box, Image, AspectRatio } from "@chakra-ui/core";
+import { Box, Image, AspectRatio, Button, useToast } from "@chakra-ui/core";
+
 import formatMoney from "../../../../utils/formatMoney";
+import { ShopifyProduct } from "../../../../graphqlTypes";
+import { StoreContext } from "../../../../config/context/createStoreContext";
 
 interface Props {
   product: ShopifyProduct;
 }
 
 const CollectionItem = ({ product }: Props) => {
+  const toast = useToast();
   const handleNavigation = async () => {
     await navigate(`/products/${product.handle}`);
   };
@@ -18,14 +20,14 @@ const CollectionItem = ({ product }: Props) => {
   const price = formatMoney(product.priceRange?.maxVariantPrice?.amount * 100);
 
   return (
-    <Box
-      onClick={handleNavigation}
-      borderWidth="1px"
-      borderRadius="lg"
-      overflow="hidden"
-      cursor="pointer"
-    >
-      <AspectRatio maxW="400px" ratio={4 / 3} mx="auto">
+    <Box borderWidth="1px" borderRadius="lg" overflow="hidden">
+      <AspectRatio
+        onClick={handleNavigation}
+        cursor="pointer"
+        maxW="400px"
+        ratio={4 / 3}
+        mx="auto"
+      >
         <Image
           src={featuredImage}
           alt={product.title}
@@ -34,13 +36,59 @@ const CollectionItem = ({ product }: Props) => {
           }}
         />
       </AspectRatio>
-      <Box p="6" textAlign="center">
+      <Box
+        cursor="pointer"
+        onClick={handleNavigation}
+        px={6}
+        pt={6}
+        textAlign="center"
+      >
         <Box fontWeight="semibold" as="p" lineHeight="tight">
           {product.title}
         </Box>
         <Box fontWeight="bold" as="p" lineHeight="tight">
           {price}
         </Box>
+      </Box>
+      <Box mt={3} px={6} pb={6} textAlign="center">
+        <StoreContext.Consumer>
+          {({ addVariantToCart }) => {
+            const onSuccess = () =>
+              toast({
+                title: "Success.",
+                description: "Added to cart.",
+                status: "success",
+                duration: 2500,
+                isClosable: true,
+              });
+
+            const onError = (error) =>
+              toast({
+                title: "Error.",
+                description: error.message,
+                status: "error",
+                duration: 2500,
+                isClosable: true,
+              });
+
+            return (
+              <Button
+                onClick={() =>
+                  addVariantToCart(
+                    {
+                      variantId: product.variants[0].shopifyId,
+                      quantity: 1,
+                    },
+                    onSuccess,
+                    onError
+                  )
+                }
+              >
+                Add to cart
+              </Button>
+            );
+          }}
+        </StoreContext.Consumer>
       </Box>
     </Box>
   );
