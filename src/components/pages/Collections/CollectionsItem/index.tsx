@@ -1,7 +1,9 @@
 import React from "react";
 import { navigate } from "gatsby";
+import LazyLoad from "react-lazyload";
+import { AspectRatio, Box, Image } from "@chakra-ui/core";
+
 import { ShopifyCollection } from "../../../../graphqlTypes";
-import { Box, Image } from "@chakra-ui/core";
 
 interface Props {
   collection: ShopifyCollection;
@@ -20,7 +22,11 @@ const CollectionsItem = ({ collection }: Props) => {
       overflow="hidden"
       cursor="pointer"
     >
-      <Image src={collection.image?.src} alt={collection.title} />
+      <LazyLoad height={350} once>
+        <AspectRatio ratio={4 / 3} mx="auto">
+          <Image src={collection.image?.src} alt={collection.title} />
+        </AspectRatio>
+      </LazyLoad>
 
       <Box p="6" textAlign="center">
         <Box fontWeight="semibold" as="h4" lineHeight="tight" isTruncated>

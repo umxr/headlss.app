@@ -1,5 +1,4 @@
 import React from "react";
-import { graphql } from "gatsby";
 import { SimpleGrid } from "@chakra-ui/core";
 
 import CollectionList from "../../components/CollectionList";
@@ -66,9 +65,10 @@ const CollectionContainer = (props: Props) => {
       <SimpleGrid
         p={6}
         columns={{
+          xs: 1,
           sm: 2,
           md: 2,
-          lg: 2,
+          lg: 3,
           xl: 3,
         }}
         spacing={6}
@@ -80,41 +80,3 @@ const CollectionContainer = (props: Props) => {
 };
 
 export default CollectionContainer;
-
-export const query = graphql`
-  query CollectionQuery($handle: String!) {
-    site {
-      siteMetadata {
-        siteUrl
-        title
-        description
-      }
-    }
-    placeholderImage: file(relativePath: { eq: "gatsby-astronaut.png" }) {
-      absolutePath
-    }
-    shopifyCollection(handle: { eq: $handle }) {
-      title
-      products {
-        id
-        handle
-        title
-        images {
-          originalSrc
-        }
-        priceRange {
-          maxVariantPrice {
-            amount
-            currencyCode
-          }
-        }
-        variants {
-          shopifyId
-        }
-      }
-      image {
-        src
-      }
-    }
-  }
-`;

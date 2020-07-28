@@ -68,8 +68,10 @@ const Products = (props: Props) => {
       <SimpleGrid
         p={6}
         columns={{
-          md: 1,
-          lg: 2,
+          xs: 1,
+          sm: 2,
+          md: 2,
+          lg: 3,
           xl: 3,
         }}
         spacing={6}

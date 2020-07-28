@@ -7,6 +7,7 @@ import { ShopifyProduct } from "../../../../graphqlTypes";
 import { StoreContext } from "../../../../config/context/createStoreContext";
 import { useDispatch } from "react-redux";
 import { closeDrawer, openDrawer } from "../../../../reducers/drawer/actions";
+import LazyLoad from "react-lazyload";
 
 interface Props {
   product: ShopifyProduct;
@@ -26,21 +27,23 @@ const CollectionItem = ({ product }: Props) => {
 
   return (
     <Box borderWidth="1px" borderRadius="lg" overflow="hidden">
-      <AspectRatio
-        onClick={handleNavigation}
-        cursor="pointer"
-        maxW="400px"
-        ratio={4 / 3}
-        mx="auto"
-      >
-        <Image
-          src={featuredImage}
-          alt={product.title}
-          style={{
-            objectFit: "contain",
-          }}
-        />
-      </AspectRatio>
+      <LazyLoad height={350} once>
+        <AspectRatio
+          onClick={handleNavigation}
+          cursor="pointer"
+          maxW="400px"
+          ratio={4 / 3}
+          mx="auto"
+        >
+          <Image
+            src={featuredImage}
+            alt={product.title}
+            style={{
+              objectFit: "contain",
+            }}
+          />
+        </AspectRatio>
+      </LazyLoad>
       <Box
         cursor="pointer"
         onClick={handleNavigation}
