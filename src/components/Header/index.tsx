@@ -21,6 +21,7 @@ import { toggleDrawer } from "../../reducers/drawer/actions";
 import { linkResolver, Templates } from "../../utils/linkResolver";
 import { RootState } from "../../config/redux/createRootReducer";
 import { toggleNavigation } from "../../reducers/navigation/actions";
+import { showSuccessNotification } from "../../reducers/notification/actions";
 
 interface Props {
   authenticated: boolean;
@@ -64,7 +65,9 @@ const Header = () => {
   const { authenticated, logout } = useContext(CustomerContext);
   const isOpen = useSelector((state: RootState) => state.navigation.isOpen);
 
-  const toggleCart = useCallback(() => dispatch(toggleDrawer()), [dispatch]);
+  const toggleCart = useCallback(() => {
+    dispatch(toggleDrawer());
+  }, [dispatch]);
   const toggleMobileNavigation = useCallback(
     () => dispatch(toggleNavigation()),
     [dispatch]
