@@ -11,6 +11,7 @@ import { Link as GatsbyLink } from "gatsby";
 
 import LoginForm from "../../components/LoginForm";
 import Layout from "../../../../../modules/Layout";
+import { linkResolver, Templates } from "../../../../../utils/linkResolver";
 
 const LoginContainer = () => {
   return (
@@ -38,9 +39,9 @@ const LoginContainer = () => {
           </Heading>
           <Divider />
           <Text fontSize="sm">
-            Why not create an account. Click {" "}
+            Why not create an account. Click{" "}
             <GatsbyLink
-              to={"/account/register"}
+              to={linkResolver(Templates.ACCOUNT_REGISTER)}
               style={{
                 textDecoration: "underline",
               }}

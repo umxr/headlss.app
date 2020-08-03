@@ -1,7 +1,14 @@
 import React from "react";
 import { Formik, Form, FormikHelpers } from "formik";
 import { useMutation } from "@apollo/react-hooks";
-import { Button, Box, Divider, Heading, Stack, useToast } from "@chakra-ui/core";
+import {
+  Button,
+  Box,
+  Divider,
+  Heading,
+  Stack,
+  useToast,
+} from "@chakra-ui/core";
 
 import validate from "./validate";
 import { INITIAL_VALUES } from "./constants";
@@ -14,6 +21,7 @@ import { useContext } from "react";
 import { CustomerContext } from "../../../../../config/context/createCustomerContext";
 import { ASSOCIATE_CUSTOMER_CHECKOUT } from "../../mutations/checkoutCustomerAssociateV2";
 import { navigate } from "gatsby";
+import { linkResolver, Templates } from "../../../../../utils/linkResolver";
 
 const LoginForm = () => {
   const { setAccessToken, setExpiry } = useContext(CustomerContext);
@@ -60,7 +68,7 @@ const LoginForm = () => {
                 data.checkoutCustomerAssociateV2.checkoutUserErrors.length === 0
               ) {
                 actions.resetForm();
-                navigate("/account/dashboard");
+                navigate(linkResolver(Templates.ACCOUNT_DASHBOARD));
               }
             })
             .catch((e) => {

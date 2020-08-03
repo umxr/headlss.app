@@ -4,6 +4,7 @@ import LazyLoad from "react-lazyload";
 import { AspectRatio, Box, Image } from "@chakra-ui/core";
 
 import { ShopifyCollection } from "../../../../graphqlTypes";
+import { linkResolver, Templates } from "../../../../utils/linkResolver";
 
 interface Props {
   collection: ShopifyCollection;
@@ -11,7 +12,9 @@ interface Props {
 
 const CollectionsItem = ({ collection }: Props) => {
   const handleNavigation = async () => {
-    await navigate(`/collections/${collection.handle}`);
+    await navigate(
+      linkResolver(Templates.COLLECTIONS, String(collection.handle))
+    );
   };
 
   const src = collection?.image?.src ? collection.image.src : undefined;

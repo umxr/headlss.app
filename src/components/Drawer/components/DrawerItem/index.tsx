@@ -3,13 +3,13 @@ import {
   AspectRatio,
   Box,
   Flex,
+  IconButton,
   Image,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-  IconButton,
   useToast,
 } from "@chakra-ui/core";
 import { navigate } from "gatsby";
@@ -17,6 +17,7 @@ import { FaTrash } from "react-icons/all";
 import { useDispatch } from "react-redux";
 import { closeDrawer } from "../../../../reducers/drawer/actions";
 import { LineItem } from "shopify-buy";
+import { linkResolver, Templates } from "../../../../utils/linkResolver";
 
 interface Props {
   item: LineItem;
@@ -46,7 +47,9 @@ const DrawerItem = ({ item, onUpdate, onRemove }: Props) => {
   const handleNavigation = async () => {
     if (!item.attrs.variant) return;
     dispatch(closeDrawer());
-    await navigate(`/products/${item.attrs.variant.attrs.product.handle}`);
+    await navigate(
+      linkResolver(Templates.PRODUCT, item.attrs.variant.attrs.product.handle)
+    );
   };
 
   const onSuccess = () => {

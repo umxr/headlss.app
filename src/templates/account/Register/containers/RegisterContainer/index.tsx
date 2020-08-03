@@ -10,6 +10,7 @@ import {
 import Layout from "../../../../../modules/Layout";
 import RegisterForm from "../../components/RegisterForm";
 import { Link as GatsbyLink } from "gatsby";
+import { linkResolver, Templates } from "../../../../../utils/linkResolver";
 
 const RegisterContainer = () => {
   return (
@@ -39,7 +40,7 @@ const RegisterContainer = () => {
           <Text fontSize="sm">
             Login Click{" "}
             <GatsbyLink
-              to={"/account/login"}
+              to={linkResolver(Templates.ACCOUNT_LOGIN)}
               style={{
                 textDecoration: "underline",
               }}

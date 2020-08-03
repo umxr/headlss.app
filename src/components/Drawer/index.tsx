@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../config/redux/createRootReducer";
 import { closeDrawer, toggleDrawer } from "../../reducers/drawer/actions";
 import DrawerItems from "./components/DrawerItems";
+import { linkResolver, Templates } from "../../utils/linkResolver";
 
 interface Props {
   placement: SlideProps["placement"];
@@ -34,7 +35,7 @@ const Drawer = ({ placement = "right", title }: Props) => {
 
   const handleCartNavigation = async () => {
     onToggle();
-    await navigate("/cart");
+    await navigate(linkResolver(Templates.CART));
   };
 
   return (

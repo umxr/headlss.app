@@ -1,19 +1,24 @@
 import React, { useContext, useState } from "react";
-import { Box, Heading, Flex, Text, IconButton } from "@chakra-ui/core";
-import { FaShoppingCart, FaUser } from "react-icons/all";
-import { Link, navigate } from "gatsby";
 import {
+  Box,
+  Flex,
+  Heading,
+  IconButton,
   Menu,
   MenuButton,
-  MenuList,
-  MenuItem,
   MenuGroup,
+  MenuItem,
+  MenuList,
+  Text,
 } from "@chakra-ui/core";
+import { FaShoppingCart, FaUser } from "react-icons/all";
+import { Link, navigate } from "gatsby";
 
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
 import { CustomerContext } from "../../config/context/createCustomerContext";
 import { useDispatch } from "react-redux";
 import { toggleDrawer } from "../../reducers/drawer/actions";
+import { linkResolver, Templates } from "../../utils/linkResolver";
 
 interface Props {
   authenticated: boolean;
@@ -24,7 +29,7 @@ const MenuItems = ({ authenticated, logout }: Props) => {
   if (authenticated) {
     return (
       <MenuGroup>
-        <MenuItem as={Link} to="/account/dashboard">
+        <MenuItem as={Link} to={linkResolver(Templates.ACCOUNT_DASHBOARD)}>
           Account
         </MenuItem>
         <MenuItem
@@ -32,7 +37,6 @@ const MenuItems = ({ authenticated, logout }: Props) => {
             if (logout) {
               logout();
             }
-            navigate("/");
           }}
         >
           Logout
@@ -43,10 +47,10 @@ const MenuItems = ({ authenticated, logout }: Props) => {
 
   return (
     <MenuGroup>
-      <MenuItem as={Link} to="/account/login">
+      <MenuItem as={Link} to={linkResolver(Templates.ACCOUNT_LOGIN)}>
         Login
       </MenuItem>
-      <MenuItem as={Link} to="/account/register">
+      <MenuItem as={Link} to={linkResolver(Templates.ACCOUNT_REGISTER)}>
         Register
       </MenuItem>
     </MenuGroup>
@@ -73,7 +77,7 @@ const Header = () => {
         borderBottomWidth="1px"
       >
         <Flex align="center" mr={5}>
-          <Link to="/">
+          <Link to={linkResolver(Templates.ROOT)}>
             <Heading as="h1" size="lg">
               Headlss
             </Heading>
@@ -101,7 +105,7 @@ const Header = () => {
         >
           <Text
             as={Link}
-            to="/collections"
+            to={linkResolver(Templates.COLLECTIONS)}
             mt={{ base: 4, md: 0 }}
             mr={6}
             display="block"
@@ -110,7 +114,7 @@ const Header = () => {
           </Text>
           <Text
             as={Link}
-            to="/products"
+            to={linkResolver(Templates.PRODUCTS)}
             mt={{ base: 4, md: 0 }}
             mr={6}
             display="block"
@@ -152,7 +156,9 @@ const Header = () => {
             <MenuList>
               <MenuItems
                 authenticated={authenticated}
-                logout={() => logout(() => navigate("/"))}
+                logout={() =>
+                  logout(() => navigate(linkResolver(Templates.ROOT)))
+                }
               />
             </MenuList>
           </Menu>

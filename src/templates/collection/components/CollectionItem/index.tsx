@@ -8,6 +8,7 @@ import { StoreContext } from "../../../../config/context/createStoreContext";
 import { useDispatch } from "react-redux";
 import { closeDrawer, openDrawer } from "../../../../reducers/drawer/actions";
 import LazyLoad from "react-lazyload";
+import { linkResolver, Templates } from "../../../../utils/linkResolver";
 
 interface Props {
   product: ShopifyProduct;
@@ -19,7 +20,7 @@ const CollectionItem = ({ product }: Props) => {
   const { adding } = useContext(StoreContext);
 
   const handleNavigation = async () => {
-    await navigate(`/products/${product.handle}`);
+    await navigate(linkResolver(Templates.PRODUCT, String(product.handle)));
   };
 
   const featuredImage =
