@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import {
   Box,
   Flex,
@@ -16,9 +16,11 @@ import { Link, navigate } from "gatsby";
 
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
 import { CustomerContext } from "../../config/context/createCustomerContext";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleDrawer } from "../../reducers/drawer/actions";
 import { linkResolver, Templates } from "../../utils/linkResolver";
+import { RootState } from "../../config/redux/createRootReducer";
+import { toggleNavigation } from "../../reducers/navigation/actions";
 
 interface Props {
   authenticated: boolean;
@@ -60,11 +62,13 @@ const MenuItems = ({ authenticated, logout }: Props) => {
 const Header = () => {
   const dispatch = useDispatch();
   const { authenticated, logout } = useContext(CustomerContext);
-  const [show, setShow] = useState(false);
+  const isOpen = useSelector((state: RootState) => state.navigation.isOpen);
 
-  const onToggle = () => dispatch(toggleDrawer());
-
-  const handleToggle = () => setShow(!show);
+  const toggleCart = useCallback(() => dispatch(toggleDrawer()), [dispatch]);
+  const toggleMobileNavigation = useCallback(
+    () => dispatch(toggleNavigation()),
+    [dispatch]
+  );
 
   return (
     <nav>
@@ -84,7 +88,10 @@ const Header = () => {
           </Link>
         </Flex>
 
-        <Box display={{ xs: "block", md: "none" }} onClick={handleToggle}>
+        <Box
+          display={{ xs: "block", md: "none" }}
+          onClick={toggleMobileNavigation}
+        >
           <svg
             fill="white"
             width="12px"
@@ -97,7 +104,7 @@ const Header = () => {
         </Box>
 
         <Box
-          display={{ xs: show ? "block" : "none", md: "flex" }}
+          display={{ xs: isOpen ? "block" : "none", md: "flex" }}
           width={{ xs: "full", md: "auto" }}
           alignItems="center"
           justifyContent="center"
@@ -124,7 +131,7 @@ const Header = () => {
         </Box>
 
         <Box
-          display={{ xs: show ? "flex" : "none", md: "flex" }}
+          display={{ xs: isOpen ? "flex" : "none", md: "flex" }}
           flexDirection={{
             xs: "column",
             md: "row",
@@ -137,7 +144,7 @@ const Header = () => {
             variant="primary"
             icon={<FaShoppingCart />}
             aria-label={`Cart`}
-            onClick={onToggle}
+            onClick={toggleCart}
           />
           <Menu>
             <MenuButton
