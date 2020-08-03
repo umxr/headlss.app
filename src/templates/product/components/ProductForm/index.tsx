@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Component, FormEvent } from "react";
+import React, { Component } from "react";
 import {
   NumberInput,
   NumberInputField,
@@ -22,11 +22,7 @@ import {
   Tab,
   TabPanel,
 } from "@chakra-ui/core";
-import {
-  Maybe,
-  ShopifyProduct,
-  ShopifyProductVariant,
-} from "../../../../graphqlTypes";
+import { ShopifyProduct } from "../../../../graphqlTypes";
 import { StoreContext } from "../../../../config/context/createStoreContext";
 import ProductOptions from "../ProductOptions";
 import ProductDescription from "../ProductDescription";
@@ -51,7 +47,7 @@ class ProductForm extends Component<Props, State> {
   state = {
     variant: "",
     quantity: 1,
-    errors: null,
+    errors: [],
   };
 
   componentDidMount() {
@@ -62,26 +58,6 @@ class ProductForm extends Component<Props, State> {
       });
     }
   }
-
-  handleChange = (event: React.ChangeEvent) => {
-    event.preventDefault();
-
-    if (event.currentTarget.value) {
-      const errors = this.state.errors;
-
-      const errorIdx = errors.findIndex(
-        (error) => error.field === event.currentTarget.name
-      );
-
-      errors.splice(errorIdx, 1);
-
-      if (~errorIdx) {
-        this.setState({ errors: errors });
-      }
-    }
-
-    this.setState({ [event.currentTarget.name]: event.currentTarget.value });
-  };
 
   handleQuantityChange = (value: string) => {
     const quantity = parseInt(value);
@@ -134,10 +110,20 @@ class ProductForm extends Component<Props, State> {
     const { product } = this.props;
     const { errors, quantity } = this.state;
 
-    const featuredImage = product.images[0].originalSrc;
+    const featuredImage =
+      product.images && product.images[0]?.originalSrc
+        ? product.images[0].originalSrc
+        : undefined;
+
+    const featuredVariant =
+      product.variants && product.variants[0] ? product.variants[0] : null;
+
+    const alt = product?.title ? product.title : "";
+
     const hasVariants =
       product && product.variants && product.variants.length > 1;
-    const isOutOfStock = !hasVariants && !product.variants[0].availableForSale;
+    const isOutOfStock =
+      !hasVariants && featuredVariant && !featuredVariant.availableForSale;
 
     return (
       <StoreContext.Consumer>
@@ -155,7 +141,7 @@ class ProductForm extends Component<Props, State> {
                   <AspectRatio maxW="400px" ratio={4 / 3} mx="auto">
                     <Image
                       src={featuredImage}
-                      alt={product.title}
+                      alt={alt}
                       style={{
                         objectFit: "contain",
                       }}
@@ -167,10 +153,10 @@ class ProductForm extends Component<Props, State> {
                     onSubmit={this.handleSubmit(addVariantToCart)}
                     noValidate
                   >
-                    {errors && errors.length && (
+                    {errors && errors.length > 0 && (
                       <Stack spacing={3}>
                         {errors.map((error: Error) => (
-                          <Alert status="error" key={error.field}>
+                          <Alert __css={{}} status="error" key={error.field}>
                             <AlertIcon />
                             <AlertDescription>{error.message}</AlertDescription>
                           </Alert>
@@ -178,25 +164,24 @@ class ProductForm extends Component<Props, State> {
                       </Stack>
                     )}
                     <Stack spacing={3}>
-                      {product.options && product.options.length > 1 && (
-                        <ProductOptions options={product.options} />
-                      )}
+                      <ProductOptions options={product.options} />
                       <FormControl>
                         <FormLabel htmlFor="quantity">Qty.</FormLabel>
                         <NumberInput
+                          __css={{}}
                           defaultValue={quantity}
                           step={1}
                           min={1}
                           onChange={(value) => this.handleQuantityChange(value)}
                         >
-                          <NumberInputField />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
+                          <NumberInputField type="number" __css={{}} />
+                          <NumberInputStepper __css={{}}>
+                            <NumberIncrementStepper __css={{}} />
+                            <NumberDecrementStepper __css={{}} />
                           </NumberInputStepper>
                         </NumberInput>
                       </FormControl>
-                      <Button type="submit" isDisabled={isOutOfStock}>
+                      <Button type="submit" isDisabled={Boolean(isOutOfStock)}>
                         {isOutOfStock ? "Out of Stock" : "Add to Cart"}
                       </Button>
                     </Stack>

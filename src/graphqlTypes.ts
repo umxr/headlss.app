@@ -11,9 +11,8 @@ export type Scalars = {
   Date: any;
   /**
    * An RFC 3986 and RFC 3987 compliant URI string.
-   * 
+   *
    * Example value: `"https://johns-apparel.myshopify.com"`.
-   * 
    */
   Shopify_URL: any;
   /** A string containing HTML code. Example value: `"<p>Grey cotton knit sweater.</p>"`. */
@@ -4298,7 +4297,7 @@ export type Shopify_CustomerCreateInput = {
   email: Scalars['String'];
   /**
    * A unique phone number for the customer.
-   * 
+   *
    * Formatted using E.164 standard. For example, _+16135551111_.
    */
   phone?: Maybe<Scalars['String']>;
@@ -4428,7 +4427,7 @@ export type Shopify_CustomerUpdateInput = {
   email?: Maybe<Scalars['String']>;
   /**
    * A unique phone number for the customer.
-   * 
+   *
    * Formatted using E.164 standard. For example, _+16135551111_. To remove the phone number, specify `null`.
    */
   phone?: Maybe<Scalars['String']>;
@@ -4692,7 +4691,7 @@ export type Shopify_Image = {
   id?: Maybe<Scalars['ID']>;
   /**
    * The location of the original image as a URL.
-   * 
+   *
    * If there are any existing transformations in the original source URL, they will remain and not be stripped.
    */
   originalSrc: Scalars['Shopify_URL'];
@@ -4700,16 +4699,16 @@ export type Shopify_Image = {
    * The location of the image as a URL.
    * @deprecated Previously an image had a single `src` field. This could either return the original image
    * location or a URL that contained transformations such as sizing or scale.
-   * 
+   *
    * These transformations were specified by arguments on the parent field.
-   * 
+   *
    * Now an image has two distinct URL fields: `originalSrc` and `transformedSrc`.
-   * 
+   *
    * * `originalSrc` - the original unmodified image URL
    * * `transformedSrc` - the image URL with the specified transformations included
-   * 
+   *
    * To migrate to the new fields, image transformations should be moved from the parent field to `transformedSrc`.
-   * 
+   *
    * Before:
    * ```graphql
    * {
@@ -4724,7 +4723,7 @@ export type Shopify_Image = {
    *   }
    * }
    * ```
-   * 
+   *
    * After:
    * ```graphql
    * {
@@ -4739,12 +4738,12 @@ export type Shopify_Image = {
    *   }
    * }
    * ```
-   * 
+   *
    */
   src: Scalars['Shopify_URL'];
   /**
    * The location of the transformed image as a URL.
-   * 
+   *
    * All transformation arguments are considered "best-effort". If they can be applied to an image, they will be.
    * Otherwise any transformations which an image type does not support will be ignored.
    */
@@ -4802,14 +4801,14 @@ export type Shopify_MailingAddress = Shopify_Node & {
   country?: Maybe<Scalars['String']>;
   /**
    * The two-letter code for the country of the address.
-   * 
+   *
    * For example, US.
    * @deprecated Use `countryCodeV2` instead
    */
   countryCode?: Maybe<Scalars['String']>;
   /**
    * The two-letter code for the country of the address.
-   * 
+   *
    * For example, US.
    */
   countryCodeV2?: Maybe<Shopify_CountryCode>;
@@ -4831,7 +4830,7 @@ export type Shopify_MailingAddress = Shopify_Node & {
   name?: Maybe<Scalars['String']>;
   /**
    * A unique phone number for the customer.
-   * 
+   *
    * Formatted using E.164 standard. For example, _+16135551111_.
    */
   phone?: Maybe<Scalars['String']>;
@@ -4839,7 +4838,7 @@ export type Shopify_MailingAddress = Shopify_Node & {
   province?: Maybe<Scalars['String']>;
   /**
    * The two-letter code for the region.
-   * 
+   *
    * For example, ON.
    */
   provinceCode?: Maybe<Scalars['String']>;
@@ -4888,7 +4887,7 @@ export type Shopify_MailingAddressInput = {
   lastName?: Maybe<Scalars['String']>;
   /**
    * A unique phone number for the customer.
-   * 
+   *
    * Formatted using E.164 standard. For example, _+16135551111_.
    */
   phone?: Maybe<Scalars['String']>;
@@ -4977,24 +4976,24 @@ export type Shopify_MoneyInput = {
 
 /**
  * A monetary value with currency.
- * 
+ *
  * To format currencies, combine this type's amount and currencyCode fields with your client's locale.
- * 
+ *
  * For example, in JavaScript you could use Intl.NumberFormat:
- * 
+ *
  * ```js
  * new Intl.NumberFormat(locale, {
  *   style: 'currency',
  *   currency: currencyCode
  * }).format(amount);
  * ```
- * 
+ *
  * Other formatting libraries include:
- * 
+ *
  * * iOS - [NumberFormatter](https://developer.apple.com/documentation/foundation/numberformatter)
  * * Android - [NumberFormat](https://developer.android.com/reference/java/text/NumberFormat.html)
  * * PHP - [NumberFormatter](http://php.net/manual/en/class.numberformatter.php)
- * 
+ *
  * For a more general solution, the [Unicode CLDR number formatting database] is available with many implementations
  * (such as [TwitterCldr](https://github.com/twitter/twitter-cldr-rb)).
  */
@@ -8439,7 +8438,6 @@ export enum SitePageFieldsEnum {
   PluginCreatorPackageJsonPeerDependenciesName = 'pluginCreator___packageJson___peerDependencies___name',
   PluginCreatorPackageJsonPeerDependenciesVersion = 'pluginCreator___packageJson___peerDependencies___version',
   PluginCreatorPackageJsonKeywords = 'pluginCreator___packageJson___keywords',
-  PluginCreatorId = 'pluginCreatorId',
   ComponentPath = 'componentPath'
 }
 
@@ -8998,13 +8996,7 @@ export type CollectionsQueryQuery = (
     )> }
   )>, placeholderImage?: Maybe<(
     { __typename?: 'File' }
-    & { childImageSharp?: Maybe<(
-      { __typename?: 'ImageSharp' }
-      & { fluid?: Maybe<(
-        { __typename?: 'ImageSharpFluid' }
-        & GatsbyImageSharpFluidFragment
-      )> }
-    )> }
+    & Pick<File, 'absolutePath'>
   )>, allShopifyCollection: (
     { __typename?: 'ShopifyCollectionConnection' }
     & { edges: Array<(
@@ -9034,13 +9026,7 @@ export type ProductsQueryQuery = (
     )> }
   )>, placeholderImage?: Maybe<(
     { __typename?: 'File' }
-    & { childImageSharp?: Maybe<(
-      { __typename?: 'ImageSharp' }
-      & { fluid?: Maybe<(
-        { __typename?: 'ImageSharpFluid' }
-        & GatsbyImageSharpFluidFragment
-      )> }
-    )> }
+    & Pick<File, 'absolutePath'>
   )>, allShopifyCollection: (
     { __typename?: 'ShopifyCollectionConnection' }
     & { edges: Array<(

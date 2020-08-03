@@ -2,15 +2,17 @@ import React, { Component } from "react";
 import { ChakraProvider, CSSReset } from "@chakra-ui/core";
 import moment from "moment";
 import gql from "graphql-tag";
-import { Client } from "shopify-buy";
 
 import {
   StoreContext,
   defaultStoreContext,
+  IStoreContext,
+  ICart,
 } from "../../config/context/createStoreContext";
 import {
   CustomerContext,
   defaultCustomerContext,
+  ICustomerContext,
 } from "../../config/context/createCustomerContext";
 
 import CustomerProvider, {
@@ -18,8 +20,12 @@ import CustomerProvider, {
 } from "../../config/providers/createCustomerProvider";
 
 import theme from "../../theme";
+import { Cart } from "shopify-buy";
 
-interface State {}
+interface State {
+  customer: ICustomerContext;
+  store: IStoreContext;
+}
 
 interface Props {
   children: React.ReactNode;
@@ -182,7 +188,7 @@ class App extends Component<Props, State> {
             console.error(error);
           });
       },
-      logout: (callback?: () => void) => {
+      logout: (callback?: () => void | Promise<void>) => {
         this.setState(
           (state) => {
             return {
@@ -216,7 +222,7 @@ class App extends Component<Props, State> {
           quantity: number;
         },
         onSuccess?: () => void,
-        onError?: () => void
+        onError?: (e?: any) => void
       ) => {
         if (variantId === "" || !quantity) {
           console.error("Both a size and quantity are required.");
@@ -231,14 +237,14 @@ class App extends Component<Props, State> {
         }));
 
         const { checkout, client } = this.state.store;
-        const checkoutId = checkout.id;
+        const checkoutId = checkout?.id;
         const lineItemsToUpdate = [
           { variantId, quantity: parseInt(String(quantity), 10) },
         ];
 
         return client.checkout
           .addLineItems(checkoutId, lineItemsToUpdate)
-          .then((checkout) => {
+          .then((checkout: Cart) => {
             this.setState(
               (state) => ({
                 store: {
@@ -264,10 +270,10 @@ class App extends Component<Props, State> {
       removeLineItem: (
         { lineItemId }: { lineItemId: string },
         onSuccess?: () => void,
-        onError?: () => void
+        onError?: (e?: any) => void
       ) => {
         const { checkout, client } = this.state.store;
-        const checkoutId = checkout.id;
+        const checkoutId = checkout?.id;
 
         return client.checkout
           .removeLineItems(checkoutId, [lineItemId])
@@ -301,36 +307,38 @@ class App extends Component<Props, State> {
           quantity: number;
         },
         onSuccess?: () => void,
-        onError?: () => void
+        onError?: (e?: any) => void
       ) => {
         const { checkout, client } = this.state.store;
-        const checkoutId = checkout.id;
-
+        const checkoutId = checkout?.id;
         const lineItemsToUpdate = [{ id: lineItemId, quantity }];
 
-        return client.checkout
-          .updateLineItems(checkoutId, lineItemsToUpdate)
-          .then((res) => {
-            this.setState(
-              (state) => ({
-                store: {
-                  ...state.store,
-                  checkout: res,
-                },
-              }),
-              () => {
-                if (onSuccess) {
-                  onSuccess();
+        return (
+          client.checkout
+            // @ts-ignore
+            .updateLineItems(checkoutId, lineItemsToUpdate)
+            .then((checkout: Cart) => {
+              this.setState(
+                (state) => ({
+                  store: {
+                    ...state.store,
+                    checkout,
+                  },
+                }),
+                () => {
+                  if (onSuccess) {
+                    onSuccess();
+                  }
                 }
+              );
+            })
+            .catch((e: any) => {
+              console.log(e);
+              if (onError) {
+                onError();
               }
-            );
-          })
-          .catch((e) => {
-            console.log(e);
-            if (onError) {
-              onError();
-            }
-          });
+            })
+        );
       },
     },
   };
@@ -342,9 +350,9 @@ class App extends Component<Props, State> {
       ? localStorage.getItem("shopify_checkout_id")
       : null;
 
-    const setCheckoutInState = (checkout) => {
+    const setCheckoutInState = (checkout: Cart) => {
       if (isBrowser) {
-        localStorage.setItem("shopify_checkout_id", checkout.id);
+        localStorage.setItem("shopify_checkout_id", String(checkout.id));
       }
 
       this.setState((state) => ({
@@ -369,7 +377,7 @@ class App extends Component<Props, State> {
           return;
         }
       } catch (e) {
-        localStorage.setItem("shopify_checkout_id", null);
+        localStorage.setItem("shopify_checkout_id", "");
       }
     }
 

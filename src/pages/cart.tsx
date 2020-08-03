@@ -15,37 +15,48 @@ class Cart extends Component<{}, State> {
     return (
       <Layout>
         <StoreContext.Consumer>
-          {({ client, checkout, removeLineItem, updateLineItem, adding }) => {
+          {({ checkout, removeLineItem, updateLineItem }) => {
             const setCartLoading = (bool: boolean) =>
               this.setState({ loading: bool });
 
-            const handleRemove = (itemID: string | number) => async (
-              event: React.SyntheticEvent
+            const handleRemove = ({ lineItemId }: { lineItemId: string }) => {
+              removeLineItem({
+                lineItemId,
+              });
+            };
+
+            const updateItem = async (
+              {
+                lineItemId,
+                quantity,
+              }: {
+                lineItemId: string;
+                quantity: number;
+              },
+              onSuccess?: () => void,
+              onError?: (e?: any) => void
             ) => {
-              event.preventDefault();
-              await removeLineItem(client, checkout.id, itemID);
-              setCartLoading(false);
+              await updateLineItem(
+                {
+                  lineItemId,
+                  quantity,
+                },
+                onSuccess,
+                onError
+              );
             };
 
-            const handleQuantityChange = (
-              lineItemID: string | number
-            ) => async (quantity: number) => {
-              if (!quantity) {
-                return;
-              }
-              await updateLineItem(client, checkout.id, lineItemID, quantity);
-              setCartLoading(false);
-            };
-
-            return (
-              <CartLineItems
-                items={checkout.lineItems}
-                handleRemove={handleRemove}
-                updateQuantity={handleQuantityChange}
-                setCartLoading={setCartLoading}
-                loading={this.state.loading}
-              />
-            );
+            if (checkout) {
+              return (
+                <CartLineItems
+                  items={checkout.lineItems}
+                  onRemove={handleRemove}
+                  onUpdate={updateItem}
+                  setCartLoading={setCartLoading}
+                  loading={this.state.loading}
+                />
+              );
+            }
           }}
         </StoreContext.Consumer>
       </Layout>

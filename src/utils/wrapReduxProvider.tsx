@@ -5,5 +5,6 @@ import configureStore from "../config/redux/configureStore";
 
 const store = configureStore();
 
-// @ts-ignore
-export default ({ element }) => <Provider store={store}>{element}</Provider>;
+export default ({ element }: any) => (
+  <Provider store={store}>{element}</Provider>
+);

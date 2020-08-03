@@ -8,7 +8,7 @@
  *
  */
 
-const moneyFormat = "£{{amount}}";
+const moneyFormat = "${{amount}}";
 
 /**
  * Format money values based on your shop currency settings
@@ -17,13 +17,13 @@ const moneyFormat = "£{{amount}}";
  * @param  {String} format - shop money_format setting
  * @return {String} value - formatted value
  */
-function formatMoney(cents: number | string, format: string = moneyFormat) {
+export function formatMoney(cents, format = moneyFormat) {
   if (typeof cents === "string") {
     cents = cents.replace(".", "");
   }
   let value = "";
-  const placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
-  const formatString = format;
+  const placeholderRegex = /{{\s*(\w+)\s*}}/;
+  const formatString = format || moneyFormat;
 
   function formatWithDelimiters(
     number,
@@ -64,5 +64,3 @@ function formatMoney(cents: number | string, format: string = moneyFormat) {
 
   return formatString.replace(placeholderRegex, value);
 }
-
-export default formatMoney;

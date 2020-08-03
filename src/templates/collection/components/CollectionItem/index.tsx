@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { navigate } from "gatsby";
 import { Box, Image, AspectRatio, Button, useToast } from "@chakra-ui/core";
 
-import formatMoney from "../../../../utils/formatMoney";
+import { formatMoney } from "../../../../utils/formatMoney";
 import { ShopifyProduct } from "../../../../graphqlTypes";
 import { StoreContext } from "../../../../config/context/createStoreContext";
 import { useDispatch } from "react-redux";
@@ -22,8 +22,14 @@ const CollectionItem = ({ product }: Props) => {
     await navigate(`/products/${product.handle}`);
   };
 
-  const featuredImage = product.images[0].originalSrc;
-  const price = formatMoney(product.priceRange?.maxVariantPrice?.amount * 100);
+  const featuredImage =
+    product.images && product.images[0]?.originalSrc
+      ? product.images[0].originalSrc
+      : undefined;
+  const alt = product?.title ? product.title : "";
+  const price = formatMoney(
+    Number(product.priceRange?.maxVariantPrice?.amount) * 100
+  );
 
   return (
     <Box borderWidth="1px" borderRadius="lg" overflow="hidden">
@@ -37,7 +43,7 @@ const CollectionItem = ({ product }: Props) => {
         >
           <Image
             src={featuredImage}
-            alt={product.title}
+            alt={alt}
             style={{
               objectFit: "contain",
             }}
@@ -75,7 +81,7 @@ const CollectionItem = ({ product }: Props) => {
               }, 2500);
             };
 
-            const onError = (error) =>
+            const onError = (error?: any) =>
               toast({
                 title: "Error.",
                 description: error.message,
@@ -84,19 +90,23 @@ const CollectionItem = ({ product }: Props) => {
                 isClosable: true,
               });
 
+            const [variant] = product.variants;
+
             return (
               <Button
                 isLoading={adding}
-                onClick={() =>
-                  addVariantToCart(
-                    {
-                      variantId: product.variants[0].shopifyId,
-                      quantity: 1,
-                    },
-                    onSuccess,
-                    onError
-                  )
-                }
+                onClick={() => {
+                  if (variant) {
+                    addVariantToCart(
+                      {
+                        variantId: String(variant.shopifyId),
+                        quantity: 1,
+                      },
+                      onSuccess,
+                      onError
+                    );
+                  }
+                }}
               >
                 Add to cart
               </Button>

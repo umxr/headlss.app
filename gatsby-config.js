@@ -49,5 +49,11 @@ module.exports = {
         },
       },
     },
+    // {
+    //   resolve: "gatsby-plugin-ts",
+    //   options: {
+    //     codegen: true,
+    //   },
+    // },
   ],
 };

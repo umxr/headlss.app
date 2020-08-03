@@ -49,8 +49,7 @@ const DashboardDetails = (props: PropsOf<typeof Box>) => {
   const [editPhone, setEditPhone] = useState<boolean>(true);
 
   const formatPhone = (phone: string) => {
-    const { number } = parsePhoneNumber(String(phone));
-    return number;
+    return parsePhoneNumber(String(phone))?.number;
   };
 
   useEffect(() => {
@@ -194,8 +193,9 @@ const DashboardDetails = (props: PropsOf<typeof Box>) => {
             <FormLabel htmlFor="phone">Phone</FormLabel>
             <InputGroup>
               <PhoneInput
-                isDisabled={editPhone}
+                // @ts-ignore
                 inputComponent={Input}
+                isDisabled={editPhone}
                 value={phone}
                 onChange={setPhone}
                 style={{

@@ -17,10 +17,10 @@ import { toggleDrawer } from "../../reducers/drawer/actions";
 
 interface Props {
   authenticated: boolean;
-  onLogout?: () => void;
+  logout: (callback?: () => void | Promise<void>) => void;
 }
 
-const MenuItems = ({ authenticated, onLogout }: Props) => {
+const MenuItems = ({ authenticated, logout }: Props) => {
   if (authenticated) {
     return (
       <MenuGroup>
@@ -29,8 +29,8 @@ const MenuItems = ({ authenticated, onLogout }: Props) => {
         </MenuItem>
         <MenuItem
           onClick={() => {
-            if (onLogout) {
-              onLogout();
+            if (logout) {
+              logout();
             }
             navigate("/");
           }}
@@ -152,7 +152,7 @@ const Header = () => {
             <MenuList>
               <MenuItems
                 authenticated={authenticated}
-                onLogout={() => logout(navigate("/"))}
+                logout={() => logout(() => navigate("/"))}
               />
             </MenuList>
           </Menu>

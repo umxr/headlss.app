@@ -8,6 +8,7 @@ import fetch from "isomorphic-fetch";
 
 const httpLink = createHttpLink({
   uri: "https://headlss.myshopify.com/api/graphql",
+  fetch,
 });
 
 const middlewareLink = setContext(() => ({
@@ -19,7 +20,6 @@ const middlewareLink = setContext(() => ({
 export const apolloClient = new ApolloClient({
   link: middlewareLink.concat(httpLink),
   cache: new InMemoryCache(),
-  fetch,
 });
 
 interface Props {

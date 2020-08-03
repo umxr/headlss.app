@@ -1,10 +1,29 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useCallback, useState } from "react";
 import { LineItem } from "shopify-buy";
+import {
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  useToast,
+} from "@chakra-ui/core";
+import { formatMoney } from "../../../../../utils/formatMoney";
 
 interface Props {
   item: LineItem;
-  handleRemove: (itemId: React.SyntheticEvent) => void;
-  updateQuantity: (itemId: string | number) => void;
+  onRemove: ({ lineItemId }: { lineItemId: string }) => void;
+  onUpdate: (
+    {
+      lineItemId,
+      quantity,
+    }: {
+      lineItemId: string;
+      quantity: number;
+    },
+    onSuccess?: () => void,
+    onError?: (e?: any) => void
+  ) => void;
   setCartLoading: (bool: boolean) => void;
   loading: boolean;
 }
@@ -12,76 +31,75 @@ interface Props {
 const CartLineItem = ({
   item,
   loading,
-  updateQuantity,
+  onUpdate,
   setCartLoading,
-  handleRemove,
+  onRemove,
 }: Props) => {
-  const [quantity, setQuantity] = useState(1);
+  console.log(item);
+  const toast = useToast();
+  const [value, setValue] = useState<number>(item.quantity);
 
-  if (item.quantity !== quantity && !loading) {
-    setQuantity(item.quantity);
-  }
-
-  const handleInputChange = (event: React.SyntheticEvent) => {
-    if (loading) {
-      return;
-    }
-
-    const value = event.target.value;
-
-    // Make sure the quantity is always at least 1.
-    const safeValue = Math.max(Number(value), 0);
-
-    // No need to update if the value hasn’t updated.
-    if (value === quantity) {
-      return;
-    }
-
-    // If the field is empty, update the state but don’t do anything else.
-    if (value === "") {
-      setQuantity(value);
-      return;
-    }
-
-    // Otherwise, trigger the loading state and set the quantity in state.
-    setCartLoading(true);
-    setQuantity(safeValue);
-
-    // If the quantity is set to 0, remove the item.
-    if (safeValue === 0) {
-      handleRemove(event);
-      return;
-    }
-
-    // If we get here, update the quantity.
-    updateQuantity(safeValue);
+  const onSuccess = () => {
+    toast({
+      title: "Success.",
+      description: "We've updated your cart.",
+      status: "success",
+      duration: 2500,
+      isClosable: true,
+    });
   };
 
-  const handleRemoveItem = (event: React.SyntheticEvent) => {
-    setCartLoading(true);
-    handleRemove(event);
+  const onError = (e: { message: any }) => {
+    toast({
+      title: "Error.",
+      description: e.message,
+      status: "error",
+      duration: 2500,
+      isClosable: true,
+    });
   };
+
+  const handleChange = useCallback(
+    (quantity: number) => {
+      const lineItemId = String(item.id);
+      setValue(quantity);
+      onUpdate(
+        {
+          lineItemId,
+          quantity,
+        },
+        onSuccess,
+        onError
+      );
+    },
+    [value]
+  );
+
+  const handleRemove = () => {
+    setCartLoading(true);
+    onRemove({ lineItemId: String(item.id) });
+  };
+
+  const price = formatMoney(Number(item.attrs.variant.price) * 100);
 
   return (
     <div>
       <p>{item.title}</p>
-      <p>
-        {item.variant.title}, ${item.variant.price}
-      </p>
-
-      <input
-        aria-label="Quantity"
-        id={`quantity_${item.id.substring(58, 64)}`}
-        type="number"
-        name="quantity"
-        inputMode="numeric"
-        min="1"
-        step="1"
-        onChange={(event) => handleInputChange(event)}
-        onBlur={() => setQuantity(item.quantity)}
-        value={quantity}
-      />
-      <button onClick={handleRemoveItem}>Remove</button>
+      <p>{price}</p>
+      <NumberInput
+        __css={{}}
+        onChange={(value) => handleChange(parseInt(value))}
+        value={value}
+        min={1}
+        focusInputOnChange={false}
+      >
+        <NumberInputField type="number" __css={{}} />
+        <NumberInputStepper __css={{}}>
+          <NumberIncrementStepper __css={{}} />
+          <NumberDecrementStepper __css={{}} />
+        </NumberInputStepper>
+      </NumberInput>
+      <button onClick={handleRemove}>Remove</button>
       <hr />
     </div>
   );

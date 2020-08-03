@@ -1,4 +1,5 @@
 import React from "react";
+import { navigate } from "gatsby";
 import {
   Button,
   Drawer as CDrawer,
@@ -13,12 +14,10 @@ import {
 } from "@chakra-ui/core";
 
 import { SlideProps } from "@chakra-ui/transition";
-import { Link } from "gatsby";
 import { StoreContext } from "../../config/context/createStoreContext";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../config/redux/createRootReducer";
-import { closeDrawer } from "../../reducers/drawer/actions";
-import DrawerEmpty from "./components/DrawerEmpty";
+import { closeDrawer, toggleDrawer } from "../../reducers/drawer/actions";
 import DrawerItems from "./components/DrawerItems";
 
 interface Props {
@@ -31,6 +30,12 @@ const Drawer = ({ placement = "right", title }: Props) => {
   const isOpen = useSelector((state: RootState) => state.drawer.isOpen);
 
   const onClose = () => dispatch(closeDrawer());
+  const onToggle = () => dispatch(toggleDrawer());
+
+  const handleCartNavigation = async () => {
+    onToggle();
+    await navigate("/cart");
+  };
 
   return (
     <CDrawer isOpen={isOpen} placement={placement} onClose={onClose}>
@@ -40,15 +45,18 @@ const Drawer = ({ placement = "right", title }: Props) => {
         {title && <CDrawerHeader>{title}</CDrawerHeader>}
         <StoreContext.Consumer>
           {({ checkout, updateLineItem, removeLineItem }) => {
-            const isCartEmpty = checkout.lineItems.length === 0;
-
-            const updateItem = (
-              lineItemId: string,
-              quantity: number,
+            const updateItem = async (
+              {
+                lineItemId,
+                quantity,
+              }: {
+                lineItemId: string;
+                quantity: number;
+              },
               onSuccess?: () => void,
-              onError?: () => void
+              onError?: (e?: any) => void
             ) => {
-              updateLineItem(
+              await updateLineItem(
                 {
                   lineItemId,
                   quantity,
@@ -61,7 +69,7 @@ const Drawer = ({ placement = "right", title }: Props) => {
             const removeItem = (
               lineItemId: string,
               onSuccess?: () => void,
-              onError?: () => void
+              onError?: (e?: any) => void
             ) => {
               removeLineItem(
                 {
@@ -72,35 +80,27 @@ const Drawer = ({ placement = "right", title }: Props) => {
               );
             };
 
-            if (isCartEmpty) {
+            if (checkout) {
               return (
-                <CDrawerBody>
-                  <DrawerEmpty />
-                </CDrawerBody>
+                <>
+                  <CDrawerBody>
+                    <DrawerItems
+                      items={checkout.lineItems}
+                      onUpdate={updateItem}
+                      onRemove={removeItem}
+                    />
+                  </CDrawerBody>
+                  <CDrawerFooter>
+                    <Stack spacing={4} width="100%">
+                      <Button onClick={handleCartNavigation}>View Cart</Button>
+                      <Button as={CLink} href={checkout.checkoutUrl} isExternal>
+                        Continue to Checkout
+                      </Button>
+                    </Stack>
+                  </CDrawerFooter>
+                </>
               );
             }
-
-            return (
-              <>
-                <CDrawerBody>
-                  <DrawerItems
-                    items={checkout.lineItems}
-                    onUpdate={updateItem}
-                    onRemove={removeItem}
-                  />
-                </CDrawerBody>
-                <CDrawerFooter>
-                  <Stack spacing={4} width="100%">
-                    <Button as={Link} to="/cart">
-                      View Cart
-                    </Button>
-                    <Button as={CLink} href={checkout.webUrl} isExternal>
-                      Continue to Checkout
-                    </Button>
-                  </Stack>
-                </CDrawerFooter>
-              </>
-            );
           }}
         </StoreContext.Consumer>
       </CDrawerContent>

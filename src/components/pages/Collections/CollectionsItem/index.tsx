@@ -14,6 +14,9 @@ const CollectionsItem = ({ collection }: Props) => {
     await navigate(`/collections/${collection.handle}`);
   };
 
+  const src = collection?.image?.src ? collection.image.src : undefined;
+  const alt = collection?.title ? collection.title : "";
+
   return (
     <Box
       onClick={handleNavigation}
@@ -24,7 +27,7 @@ const CollectionsItem = ({ collection }: Props) => {
     >
       <LazyLoad height={350} once>
         <AspectRatio ratio={4 / 3} mx="auto">
-          <Image src={collection.image?.src} alt={collection.title} />
+          <Image src={src} alt={alt} />
         </AspectRatio>
       </LazyLoad>
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   AspectRatio,
   Box,
@@ -12,24 +12,29 @@ import {
   IconButton,
   useToast,
 } from "@chakra-ui/core";
-import { LineItem } from "shopify-buy";
 import { navigate } from "gatsby";
 import { FaTrash } from "react-icons/all";
 import { useDispatch } from "react-redux";
 import { closeDrawer } from "../../../../reducers/drawer/actions";
+import { LineItem } from "shopify-buy";
 
 interface Props {
   item: LineItem;
   onUpdate: (
-    lineItemId: string,
-    quantity: number,
+    {
+      lineItemId,
+      quantity,
+    }: {
+      lineItemId: string;
+      quantity: number;
+    },
     onSuccess?: () => void,
-    onError?: () => void
+    onError?: (e?: any) => void
   ) => void;
   onRemove: (
     lineItemId: string,
     onSuccess?: () => void,
-    onError?: () => void
+    onError?: (e?: any) => void
   ) => void;
 }
 
@@ -39,8 +44,9 @@ const DrawerItem = ({ item, onUpdate, onRemove }: Props) => {
   const dispatch = useDispatch();
 
   const handleNavigation = async () => {
+    if (!item.attrs.variant) return;
     dispatch(closeDrawer());
-    await navigate(`/products/${item.variant.product.handle}`);
+    await navigate(`/products/${item.attrs.variant.attrs.product.handle}`);
   };
 
   const onSuccess = () => {
@@ -53,7 +59,7 @@ const DrawerItem = ({ item, onUpdate, onRemove }: Props) => {
     });
   };
 
-  const onError = (e) => {
+  const onError = (e?: any) => {
     toast({
       title: "Error.",
       description: e.message,
@@ -63,16 +69,27 @@ const DrawerItem = ({ item, onUpdate, onRemove }: Props) => {
     });
   };
 
-  const handleChange = (value: number) => {
-    setValue(value);
-    onUpdate(item.id, value, onSuccess, onError);
-  };
+  const handleChange = useCallback(
+    (quantity: number) => {
+      const lineItemId = String(item.id);
+      setValue(quantity);
+      onUpdate(
+        {
+          lineItemId,
+          quantity,
+        },
+        onSuccess,
+        onError
+      );
+    },
+    [value]
+  );
 
   const handleRemove = () => {
-    onRemove(item.id, onSuccess, onError);
+    onRemove(String(item.id), onSuccess, onError);
   };
 
-  const featuredImage = item.variant.image.src;
+  const featuredImage = item.attrs.variant.image.src;
 
   return (
     <Box borderWidth="1px" borderRadius="lg" overflow="hidden" p={3}>
@@ -103,14 +120,16 @@ const DrawerItem = ({ item, onUpdate, onRemove }: Props) => {
             {item.title}
           </Box>
           <NumberInput
+            __css={{}}
             onChange={(value) => handleChange(parseInt(value))}
             value={value}
             min={1}
+            focusInputOnChange={false}
           >
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
+            <NumberInputField type="number" __css={{}} />
+            <NumberInputStepper __css={{}}>
+              <NumberIncrementStepper __css={{}} />
+              <NumberDecrementStepper __css={{}} />
             </NumberInputStepper>
           </NumberInput>
         </Box>
@@ -121,6 +140,7 @@ const DrawerItem = ({ item, onUpdate, onRemove }: Props) => {
           variant="primary"
           icon={<FaTrash />}
           onClick={handleRemove}
+          aria-label={`Remove Product`}
         />
       </Flex>
     </Box>

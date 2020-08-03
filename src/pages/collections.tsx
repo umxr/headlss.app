@@ -6,21 +6,17 @@ import { SimpleGrid } from "@chakra-ui/core";
 import Layout from "../modules/Layout";
 
 import {
-  QueryImageSharpArgs,
+  File,
   ShopifyCollection,
   ShopifyCollectionEdge,
   Site,
 } from "../graphqlTypes";
 import CollectionsList from "../components/pages/Collections/CollectionsList";
 
-interface ChildImageSharp {
-  childImageSharp: QueryImageSharpArgs;
-}
-
 interface Props {
   data: {
     site: Site;
-    placeholderImage: ChildImageSharp;
+    placeholderImage: File;
     allShopifyCollection: { __typename?: "ShopifyCollectionConnection" } & {
       edges: Array<
         { __typename?: "ShopifyCollectionEdge" } & {
@@ -42,7 +38,7 @@ const Collections = (props: Props) => {
   const title = "Shopify Collections Page";
   const description = "Shopify Collections Page";
   const handle = "collections";
-  const image = placeholderImage.childImageSharp.fluid?.src;
+  const image = placeholderImage.absolutePath;
 
   return (
     <Layout>
@@ -94,11 +90,7 @@ export const query = graphql`
       }
     }
     placeholderImage: file(relativePath: { eq: "gatsby-astronaut.png" }) {
-      childImageSharp {
-        fluid(maxWidth: 480, maxHeight: 480) {
-          ...GatsbyImageSharpFluid
-        }
-      }
+      absolutePath
     }
     allShopifyCollection {
       edges {

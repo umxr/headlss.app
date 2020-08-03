@@ -1,36 +1,48 @@
 import React from "react";
-import { LineItem } from "shopify-buy";
 import CartLineItem from "../CartLineItem";
+import { LineItem } from "shopify-buy";
 
 interface Props {
   items: LineItem[];
-  handleRemove: (itemId: string | number) => void;
-  updateQuantity: (itemId: string | number) => void;
+  onRemove: ({ lineItemId }: { lineItemId: string }) => void;
+  onUpdate: (
+    {
+      lineItemId,
+      quantity,
+    }: {
+      lineItemId: string;
+      quantity: number;
+    },
+    onSuccess?: () => void,
+    onError?: (e?: any) => void
+  ) => void;
   setCartLoading: (bool: boolean) => void;
   loading: boolean;
 }
 
 const CartLineItems = ({
   items,
-  handleRemove,
+  onRemove,
   loading,
   setCartLoading,
-  updateQuantity,
+  onUpdate,
 }: Props) => {
   return (
     <div>
-      {items.map((item: LineItem) => {
-        return (
-          <CartLineItem
-            key={item.id}
-            item={item}
-            handleRemove={handleRemove(item.id)}
-            updateQuantity={updateQuantity(item.id)}
-            setCartLoading={setCartLoading}
-            loading={loading}
-          />
-        );
-      })}
+      {items &&
+        items.map((item: LineItem) => {
+          if (!item) return;
+          return (
+            <CartLineItem
+              key={item.id}
+              item={item}
+              onRemove={onRemove}
+              onUpdate={onUpdate}
+              setCartLoading={setCartLoading}
+              loading={loading}
+            />
+          );
+        })}
     </div>
   );
 };

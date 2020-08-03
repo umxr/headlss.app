@@ -1,13 +1,8 @@
 import React from "react";
 import { graphql } from "gatsby";
-import { SimpleGrid } from "@chakra-ui/core";
 
-import CollectionList from "../../components/CollectionList";
-import CollectionEmpty from "../../components/CollectionEmpty";
-import CollectionLayout from "../../components/CollectionLayout";
-
-import { ShopifyCollection, Site } from "../../../../graphqlTypes";
 import CollectionContainer from "./containers/CollectionContainer";
+import { ShopifyCollection, Site } from "../../graphqlTypes";
 
 interface Image {
   absolutePath: string;

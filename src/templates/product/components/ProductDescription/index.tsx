@@ -2,10 +2,11 @@ import React from "react";
 import { Box } from "@chakra-ui/core";
 
 interface Props {
-  description: string;
+  description?: string | null | undefined
 }
 
 const ProductDescription = ({ description }: Props) => {
+  if (!description) return null;
   return (
     <Box
       dangerouslySetInnerHTML={{

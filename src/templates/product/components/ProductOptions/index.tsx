@@ -3,29 +3,33 @@ import { FormControl, FormLabel } from "@chakra-ui/core";
 
 import * as S from "./styles";
 
-import { ShopifyProductOption } from "../../../../graphqlTypes";
+import { Maybe, ShopifyProductOption } from "../../../../graphqlTypes";
 
 interface Props {
-  options: ShopifyProductOption[];
+  options: Maybe<ShopifyProductOption>[] | null | undefined;
 }
 
 const ProductOptions = ({ options }: Props) => {
+  if (!options || options.length === 1) return null;
   return (
     <>
-      {options.map((option: ShopifyProductOption, index: number) => {
+      {options.map((option: Maybe<ShopifyProductOption>, index: number) => {
+        if (!option) return null;
         return (
-          <FormControl key={option.shopifyId}>
+          <FormControl key={option.id}>
             <FormLabel htmlFor={`SingleOptionSelector-${index}`}>
               {option.name}
             </FormLabel>
             <S.Select>
-              {option.values.map((value) => {
-                return (
-                  <option key={value} value={value}>
-                    {value}
-                  </option>
-                );
-              })}
+              {option.values &&
+                option.values.map((value) => {
+                  const optionValue = String(value);
+                  return (
+                    <option key={optionValue} value={optionValue}>
+                      {value}
+                    </option>
+                  );
+                })}
             </S.Select>
           </FormControl>
         );

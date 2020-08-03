@@ -14,7 +14,7 @@ import mapAddressToFormState from "../../utils/mapAddressToFormState";
 interface Props {
   onSubmit: (view: string) => void;
   onCancel: (view: string) => void;
-  selectedAddress: Shopify_MailingAddress;
+  selectedAddress: Shopify_MailingAddress | null;
 }
 
 const EditAddressForm = ({ onSubmit, onCancel, selectedAddress }: Props) => {
@@ -27,7 +27,7 @@ const EditAddressForm = ({ onSubmit, onCancel, selectedAddress }: Props) => {
 
   useEffect(() => {
     if (selectedAddress) {
-      const address = mapAddressToFormState(selectedAddress);
+      const address = mapAddressToFormState(selectedAddress, INITIAL_VALUES);
       setFormState(address);
     }
   }, [selectedAddress]);
@@ -36,6 +36,7 @@ const EditAddressForm = ({ onSubmit, onCancel, selectedAddress }: Props) => {
     values: FormValues,
     actions: FormikHelpers<FormValues>
   ) => {
+    if (!selectedAddress) return;
     customerAddressUpdate({
       variables: {
         customerAccessToken,

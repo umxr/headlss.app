@@ -1,25 +1,34 @@
 import React from "react";
-import { LineItem } from "shopify-buy";
 import { Stack } from "@chakra-ui/core";
 
 import DrawerItem from "../DrawerItem";
+import DrawerEmpty from "../DrawerEmpty";
+import { LineItem } from "shopify-buy";
 
 interface Props {
   items: LineItem[];
   onUpdate: (
-    lineItemId: string,
-    quantity: number,
+    {
+      lineItemId,
+      quantity,
+    }: {
+      lineItemId: string;
+      quantity: number;
+    },
     onSuccess?: () => void,
-    onError?: () => void
+    onError?: (e?: any) => void
   ) => void;
   onRemove: (
     lineItemId: string,
     onSuccess?: () => void,
-    onError?: () => void
+    onError?: (e?: any) => void
   ) => void;
 }
 
 const DrawerItems = ({ items, onUpdate, onRemove }: Props) => {
+  if (!items || items.length === 0) {
+    return <DrawerEmpty />;
+  }
   return (
     <Stack spacing={6} height="100%">
       {items.map((item: LineItem) => {
