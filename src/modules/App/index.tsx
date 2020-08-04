@@ -7,7 +7,6 @@ import {
   StoreContext,
   defaultStoreContext,
   IStoreContext,
-  ICart,
 } from "../../config/context/createStoreContext";
 import {
   CustomerContext,
