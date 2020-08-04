@@ -21,15 +21,28 @@ import CustomerProvider, {
 
 import theme from "../../theme";
 import { Cart } from "shopify-buy";
+import { Dispatch } from "redux";
+import { connect } from "react-redux";
+import {
+  showErrorNotification,
+  showSuccessNotification,
+} from "../../reducers/notification/actions";
 
 interface State {
   customer: ICustomerContext;
   store: IStoreContext;
 }
 
-interface Props {
+type StateProps = {
+  showSuccessNotification: (message: string) => void;
+  showErrorNotification: (message: string) => void;
+};
+
+type OwnProps = {
   children: React.ReactNode;
-}
+};
+
+type Props = StateProps & OwnProps;
 
 class App extends Component<Props, State> {
   state = {
@@ -213,17 +226,13 @@ class App extends Component<Props, State> {
     },
     store: {
       ...defaultStoreContext,
-      addVariantToCart: (
-        {
-          variantId,
-          quantity,
-        }: {
-          variantId: string;
-          quantity: number;
-        },
-        onSuccess?: () => void,
-        onError?: (e?: any) => void
-      ) => {
+      addVariantToCart: ({
+        variantId,
+        quantity,
+      }: {
+        variantId: string;
+        quantity: number;
+      }) => {
         if (variantId === "" || !quantity) {
           console.error("Both a size and quantity are required.");
           return;
@@ -237,6 +246,7 @@ class App extends Component<Props, State> {
         }));
 
         const { checkout, client } = this.state.store;
+        const { showErrorNotification, showSuccessNotification } = this.props;
         const checkoutId = checkout?.id;
         const lineItemsToUpdate = [
           { variantId, quantity: parseInt(String(quantity), 10) },
@@ -254,24 +264,17 @@ class App extends Component<Props, State> {
                 },
               }),
               () => {
-                if (onSuccess) {
-                  onSuccess();
-                }
+                showSuccessNotification("Added to cart.");
               }
             );
           })
           .catch((e) => {
             console.log(e);
-            if (onError) {
-              onError(e);
-            }
+            showErrorNotification(e.message);
           });
       },
-      removeLineItem: (
-        { lineItemId }: { lineItemId: string },
-        onSuccess?: () => void,
-        onError?: (e?: any) => void
-      ) => {
+      removeLineItem: ({ lineItemId }: { lineItemId: string }) => {
+        const { showSuccessNotification, showErrorNotification } = this.props;
         const { checkout, client } = this.state.store;
         const checkoutId = checkout?.id;
 
@@ -286,29 +289,22 @@ class App extends Component<Props, State> {
                 },
               }),
               () => {
-                if (onSuccess) {
-                  onSuccess();
-                }
+                showSuccessNotification("We've updated your cart");
               }
             );
           })
           .catch((e) => {
-            if (onError) {
-              onError(e);
-            }
+            showErrorNotification(e.message);
           });
       },
-      updateLineItem: (
-        {
-          lineItemId,
-          quantity,
-        }: {
-          lineItemId: string;
-          quantity: number;
-        },
-        onSuccess?: () => void,
-        onError?: (e?: any) => void
-      ) => {
+      updateLineItem: ({
+        lineItemId,
+        quantity,
+      }: {
+        lineItemId: string;
+        quantity: number;
+      }) => {
+        const { showErrorNotification, showSuccessNotification } = this.props;
         const { checkout, client } = this.state.store;
         const checkoutId = checkout?.id;
         const lineItemsToUpdate = [{ id: lineItemId, quantity }];
@@ -326,17 +322,13 @@ class App extends Component<Props, State> {
                   },
                 }),
                 () => {
-                  if (onSuccess) {
-                    onSuccess();
-                  }
+                  showSuccessNotification("We've updated your cart.");
                 }
               );
             })
             .catch((e: any) => {
               console.log(e);
-              if (onError) {
-                onError();
-              }
+              showErrorNotification(e.message);
             })
         );
       },
@@ -414,4 +406,19 @@ class App extends Component<Props, State> {
   }
 }
 
-export default App;
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  showSuccessNotification: (message: string) =>
+    dispatch(
+      showSuccessNotification({
+        message,
+      })
+    ),
+  showErrorNotification: (message: string) =>
+    dispatch(
+      showErrorNotification({
+        message,
+      })
+    ),
+});
+
+export default connect(null, mapDispatchToProps)(App);

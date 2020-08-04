@@ -1,12 +1,10 @@
 import React, { useContext } from "react";
 import { navigate } from "gatsby";
-import { Box, Image, AspectRatio, Button, useToast } from "@chakra-ui/core";
+import { Box, Image, AspectRatio, Button } from "@chakra-ui/core";
 
 import { formatMoney } from "../../../../utils/formatMoney";
 import { ShopifyProduct } from "../../../../graphqlTypes";
 import { StoreContext } from "../../../../config/context/createStoreContext";
-import { useDispatch } from "react-redux";
-import { closeDrawer, openDrawer } from "../../../../reducers/drawer/actions";
 import LazyLoad from "react-lazyload";
 import { linkResolver, Templates } from "../../../../utils/linkResolver";
 
@@ -15,8 +13,6 @@ interface Props {
 }
 
 const CollectionItem = ({ product }: Props) => {
-  const toast = useToast();
-  const dispatch = useDispatch();
   const { adding } = useContext(StoreContext);
 
   const handleNavigation = async () => {
@@ -68,29 +64,6 @@ const CollectionItem = ({ product }: Props) => {
       <Box mt={3} px={6} pb={6} textAlign="center">
         <StoreContext.Consumer>
           {({ addVariantToCart }) => {
-            const onSuccess = () => {
-              toast({
-                title: "Success.",
-                description: "Added to cart.",
-                status: "success",
-                duration: 2500,
-                isClosable: true,
-              });
-              dispatch(openDrawer());
-              setTimeout(() => {
-                dispatch(closeDrawer());
-              }, 2500);
-            };
-
-            const onError = (error?: any) =>
-              toast({
-                title: "Error.",
-                description: error.message,
-                status: "error",
-                duration: 2500,
-                isClosable: true,
-              });
-
             const [variant] = product.variants;
 
             return (
@@ -98,14 +71,10 @@ const CollectionItem = ({ product }: Props) => {
                 isLoading={adding}
                 onClick={() => {
                   if (variant) {
-                    addVariantToCart(
-                      {
-                        variantId: String(variant.shopifyId),
-                        quantity: 1,
-                      },
-                      onSuccess,
-                      onError
-                    );
+                    addVariantToCart({
+                      variantId: String(variant.shopifyId),
+                      quantity: 1,
+                    });
                   }
                 }}
               >

@@ -25,32 +25,25 @@ export interface ICart extends Cart {
 export interface IStoreContext {
   adding: boolean;
   client: IClient | null;
-  checkout: Cart | {
-    id: string;
-    lineItems: ILineItem[];
-    checkoutUrl: string;
-  };
-  addVariantToCart: (
-    {
-      variantId,
-      quantity,
-    }: {
-      variantId: string;
-      quantity: number;
-    },
-    onSuccess?: () => void,
-    onError?: (e?: any) => void
-  ) => void;
-  removeLineItem: (
-    { lineItemId }: { lineItemId: string },
-    onSuccess?: () => void,
-    onError?: (e?: any) => void
-  ) => void;
-  updateLineItem: (
-    lineItemId: { lineItemId: string; quantity: number },
-    onSuccess?: () => void,
-    onError?: (e?: any) => void
-  ) => void;
+  checkout:
+    | Cart
+    | {
+        id: string;
+        lineItems: ILineItem[];
+        checkoutUrl: string;
+      };
+  addVariantToCart: ({
+    variantId,
+    quantity,
+  }: {
+    variantId: string;
+    quantity: number;
+  }) => void;
+  removeLineItem: ({ lineItemId }: { lineItemId: string }) => void;
+  updateLineItem: (lineItemId: {
+    lineItemId: string;
+    quantity: number;
+  }) => void;
 }
 
 export const defaultStoreContext = {
@@ -61,27 +54,15 @@ export const defaultStoreContext = {
     lineItems: [],
     checkoutUrl: "",
   },
-  addVariantToCart: (
-    {
-      variantId,
-      quantity,
-    }: {
-      variantId: string;
-      quantity: number;
-    },
-    onSuccess?: () => void,
-    onError?: (e?: any) => void
-  ) => {},
-  removeLineItem: (
-    { lineItemId }: { lineItemId: string },
-    onSuccess?: () => void,
-    onError?: (e?: any) => void
-  ) => {},
-  updateLineItem: (
-    lineItemId: { lineItemId: string; quantity: number },
-    onSuccess?: () => void,
-    onError?: (e?: any) => void
-  ) => {},
+  addVariantToCart: ({
+    variantId,
+    quantity,
+  }: {
+    variantId: string;
+    quantity: number;
+  }) => {},
+  removeLineItem: ({ lineItemId }: { lineItemId: string }) => {},
+  updateLineItem: (lineItemId: { lineItemId: string; quantity: number }) => {},
 };
 
 export const StoreContext = createContext<IStoreContext>(defaultStoreContext);

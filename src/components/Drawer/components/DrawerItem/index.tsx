@@ -10,7 +10,6 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  useToast,
 } from "@chakra-ui/core";
 import { navigate } from "gatsby";
 import { FaTrash } from "react-icons/all";
@@ -21,75 +20,42 @@ import { linkResolver, Templates } from "../../../../utils/linkResolver";
 
 interface Props {
   item: LineItem;
-  onUpdate: (
-    {
-      lineItemId,
-      quantity,
-    }: {
-      lineItemId: string;
-      quantity: number;
-    },
-    onSuccess?: () => void,
-    onError?: (e?: any) => void
-  ) => void;
-  onRemove: (
-    lineItemId: string,
-    onSuccess?: () => void,
-    onError?: (e?: any) => void
-  ) => void;
+  onUpdate: ({
+    lineItemId,
+    quantity,
+  }: {
+    lineItemId: string;
+    quantity: number;
+  }) => void;
+  onRemove: (lineItemId: string) => void;
 }
 
 const DrawerItem = ({ item, onUpdate, onRemove }: Props) => {
   const [value, setValue] = useState<number>(item.quantity);
-  const toast = useToast();
   const dispatch = useDispatch();
 
   const handleNavigation = async () => {
     if (!item.attrs.variant) return;
     dispatch(closeDrawer());
     await navigate(
-      linkResolver(Templates.PRODUCT, item.attrs.variant.attrs.product.handle)
+      linkResolver(Templates.PRODUCTS, item.attrs.variant.attrs.product.handle)
     );
-  };
-
-  const onSuccess = () => {
-    toast({
-      title: "Success.",
-      description: "We've updated your cart.",
-      status: "success",
-      duration: 2500,
-      isClosable: true,
-    });
-  };
-
-  const onError = (e?: any) => {
-    toast({
-      title: "Error.",
-      description: e.message,
-      status: "error",
-      duration: 2500,
-      isClosable: true,
-    });
   };
 
   const handleChange = useCallback(
     (quantity: number) => {
       const lineItemId = String(item.id);
       setValue(quantity);
-      onUpdate(
-        {
-          lineItemId,
-          quantity,
-        },
-        onSuccess,
-        onError
-      );
+      onUpdate({
+        lineItemId,
+        quantity,
+      });
     },
     [value]
   );
 
   const handleRemove = () => {
-    onRemove(String(item.id), onSuccess, onError);
+    onRemove(String(item.id));
   };
 
   const featuredImage = item.attrs.variant.image.src;

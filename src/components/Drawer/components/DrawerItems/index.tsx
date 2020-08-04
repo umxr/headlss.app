@@ -7,22 +7,14 @@ import { LineItem } from "shopify-buy";
 
 interface Props {
   items: LineItem[];
-  onUpdate: (
-    {
-      lineItemId,
-      quantity,
-    }: {
-      lineItemId: string;
-      quantity: number;
-    },
-    onSuccess?: () => void,
-    onError?: (e?: any) => void
-  ) => void;
-  onRemove: (
-    lineItemId: string,
-    onSuccess?: () => void,
-    onError?: (e?: any) => void
-  ) => void;
+  onUpdate: ({
+    lineItemId,
+    quantity,
+  }: {
+    lineItemId: string;
+    quantity: number;
+  }) => void;
+  onRemove: (lineItemId: string) => void;
 }
 
 const DrawerItems = ({ items, onUpdate, onRemove }: Props) => {

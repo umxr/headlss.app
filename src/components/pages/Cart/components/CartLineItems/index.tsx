@@ -5,17 +5,13 @@ import { LineItem } from "shopify-buy";
 interface Props {
   items: LineItem[];
   onRemove: ({ lineItemId }: { lineItemId: string }) => void;
-  onUpdate: (
-    {
-      lineItemId,
-      quantity,
-    }: {
-      lineItemId: string;
-      quantity: number;
-    },
-    onSuccess?: () => void,
-    onError?: (e?: any) => void
-  ) => void;
+  onUpdate: ({
+    lineItemId,
+    quantity,
+  }: {
+    lineItemId: string;
+    quantity: number;
+  }) => void;
   setCartLoading: (bool: boolean) => void;
   loading: boolean;
 }

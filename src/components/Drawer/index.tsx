@@ -46,39 +46,23 @@ const Drawer = ({ placement = "right", title }: Props) => {
         {title && <CDrawerHeader>{title}</CDrawerHeader>}
         <StoreContext.Consumer>
           {({ checkout, updateLineItem, removeLineItem }) => {
-            const updateItem = async (
-              {
+            const updateItem = async ({
+              lineItemId,
+              quantity,
+            }: {
+              lineItemId: string;
+              quantity: number;
+            }) => {
+              await updateLineItem({
                 lineItemId,
                 quantity,
-              }: {
-                lineItemId: string;
-                quantity: number;
-              },
-              onSuccess?: () => void,
-              onError?: (e?: any) => void
-            ) => {
-              await updateLineItem(
-                {
-                  lineItemId,
-                  quantity,
-                },
-                onSuccess,
-                onError
-              );
+              });
             };
 
-            const removeItem = (
-              lineItemId: string,
-              onSuccess?: () => void,
-              onError?: (e?: any) => void
-            ) => {
-              removeLineItem(
-                {
-                  lineItemId,
-                },
-                onSuccess,
-                onError
-              );
+            const removeItem = (lineItemId: string) => {
+              removeLineItem({
+                lineItemId,
+              });
             };
 
             if (checkout) {
