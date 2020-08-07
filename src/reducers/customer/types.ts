@@ -21,6 +21,7 @@ import {
   EXPIRY_TOKEN_DELETE_SUCCESS,
   EXPIRY_TOKEN_READ,
   EXPIRY_TOKEN_UPDATE,
+  EXPIRY_TOKEN_VALIDATE,
   UNAUTHENTICATED_FAILURE,
   UNAUTHENTICATED_REQUEST,
   UNAUTHENTICATED_SUCCESS,
@@ -75,6 +76,13 @@ export interface ExpiryTokenCreateFailureAction {
 
 export interface ExpiryTokenReadAction {
   type: typeof EXPIRY_TOKEN_READ;
+}
+
+export interface ExpiryTokenValidateAction {
+  type: typeof EXPIRY_TOKEN_VALIDATE;
+  payload: {
+    valid: boolean;
+  };
 }
 
 export interface ExpiryTokenUpdateAction {
