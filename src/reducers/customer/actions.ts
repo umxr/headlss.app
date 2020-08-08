@@ -1,26 +1,40 @@
 import {
   AccessTokenDeleteSuccessAction,
   AccessTokenUpdateAction,
+  AuthenticatedSuccess,
+  CustomerDestroySuccessAction,
   ExpiryTokenCreateSuccessAction,
+  ExpiryTokenDeleteSuccess,
   ExpiryTokenValidateAction,
+  UnauthenticatedSuccess,
 } from "./types";
 import {
   ACCESS_TOKEN_DELETE_SUCCESS,
   ACCESS_TOKEN_UPDATE,
+  AUTHENTICATED_SUCCESS,
   CUSTOMER_DESTROY_SUCCESS,
   EXPIRY_TOKEN_CREATE_SUCCESS,
+  EXPIRY_TOKEN_DELETE_SUCCESS,
   EXPIRY_TOKEN_UPDATE,
   EXPIRY_TOKEN_VALIDATE,
+  UNAUTHENTICATED_SUCCESS,
 } from "./actionTypes";
 
-export const accessTokenDeleteSuccess = (
-  customerAccessToken: string
-): AccessTokenDeleteSuccessAction => {
+export const authenticatedSuccess = (): AuthenticatedSuccess => {
+  return {
+    type: AUTHENTICATED_SUCCESS,
+  };
+};
+
+export const unauthenticatedSuccess = (): UnauthenticatedSuccess => {
+  return {
+    type: UNAUTHENTICATED_SUCCESS,
+  };
+};
+
+export const accessTokenDeleteSuccess = (): AccessTokenDeleteSuccessAction => {
   return {
     type: ACCESS_TOKEN_DELETE_SUCCESS,
-    payload: {
-      customerAccessToken,
-    },
   };
 };
 
@@ -46,6 +60,12 @@ export const expiryTokenCreateSuccess = (
   };
 };
 
+export const expiryTokenDeleteSuccess = (): ExpiryTokenDeleteSuccess => {
+  return {
+    type: EXPIRY_TOKEN_DELETE_SUCCESS,
+  };
+};
+
 export const expiryTokenValidate = (
   valid: boolean
 ): ExpiryTokenValidateAction => {
@@ -66,13 +86,8 @@ export const expiryTokenUpdate = (expiryToken: string) => {
   };
 };
 
-export const customerDestroySuccess = () => {
+export const customerDestroySuccess = (): CustomerDestroySuccessAction => {
   return {
     type: CUSTOMER_DESTROY_SUCCESS,
-    payload: {
-      authenticated: false,
-      customerAccessToken: null,
-      expiry: null,
-    },
   };
 };

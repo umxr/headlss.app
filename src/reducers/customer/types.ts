@@ -75,6 +75,9 @@ export interface AccessTokenCreateRequest {
 
 export interface AccessTokenCreateSuccess {
   type: typeof ACCESS_TOKEN_CREATE_SUCCESS;
+  payload: {
+    customerAccessToken: string;
+  };
 }
 
 export interface AccessTokenCreateFailure {
@@ -87,9 +90,6 @@ export interface AccessTokenDeleteRequestAction {
 
 export interface AccessTokenDeleteSuccessAction {
   type: typeof ACCESS_TOKEN_DELETE_SUCCESS;
-  payload: {
-    customerAccessToken: string;
-  };
 }
 
 export interface AccessTokenDeleteFailureAction {
@@ -146,13 +146,36 @@ export interface CustomerDestroyRequestAction {
 
 export interface CustomerDestroySuccessAction {
   type: typeof CUSTOMER_DESTROY_SUCCESS;
-  payload: {
-    authenticated: boolean;
-    customerAccessToken: null;
-    expiry: null;
-  };
 }
 
 export interface CustomerDestroyFailureAction {
   type: typeof CUSTOMER_DESTROY_FAILURE;
 }
+
+export type Action =
+  | UnauthenticatedSuccess
+  | UnauthenticatedFailure
+  | UnauthenticatedRequest
+  | AuthenticatedFailure
+  | AuthenticatedRequest
+  | AuthenticatedSuccess
+  | ExpiryTokenDeleteSuccess
+  | ExpiryTokenDeleteRequest
+  | ExpiryTokenDeleteFailure
+  | AccessTokenCreateRequest
+  | AccessTokenCreateSuccess
+  | AccessTokenCreateFailure
+  | AccessTokenDeleteRequestAction
+  | AccessTokenDeleteSuccessAction
+  | AccessTokenDeleteFailureAction
+  | AccessTokenReadAction
+  | AccessTokenUpdateAction
+  | ExpiryTokenCreateRequestAction
+  | ExpiryTokenCreateSuccessAction
+  | ExpiryTokenCreateFailureAction
+  | ExpiryTokenReadAction
+  | ExpiryTokenValidateAction
+  | ExpiryTokenUpdateAction
+  | CustomerDestroyRequestAction
+  | CustomerDestroySuccessAction
+  | CustomerDestroyFailureAction;

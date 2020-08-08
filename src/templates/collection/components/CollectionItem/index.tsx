@@ -16,7 +16,7 @@ const CollectionItem = ({ product }: Props) => {
   const { adding } = useContext(StoreContext);
 
   const handleNavigation = async () => {
-    await navigate(linkResolver(Templates.PRODUCT, String(product.handle)));
+    await navigate(linkResolver(Templates.PRODUCTS, String(product.handle)));
   };
 
   const featuredImage =
