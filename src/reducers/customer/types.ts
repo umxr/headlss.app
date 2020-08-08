@@ -33,6 +33,54 @@ export interface State {
   expiry: string | null;
 }
 
+export interface UnauthenticatedRequest {
+  type: typeof UNAUTHENTICATED_REQUEST;
+}
+
+export interface UnauthenticatedFailure {
+  type: typeof UNAUTHENTICATED_FAILURE;
+}
+
+export interface UnauthenticatedSuccess {
+  type: typeof UNAUTHENTICATED_SUCCESS;
+}
+
+export interface AuthenticatedRequest {
+  type: typeof AUTHENTICATED_REQUEST;
+}
+
+export interface AuthenticatedFailure {
+  type: typeof AUTHENTICATED_FAILURE;
+}
+
+export interface AuthenticatedSuccess {
+  type: typeof AUTHENTICATED_SUCCESS;
+}
+
+export interface ExpiryTokenDeleteSuccess {
+  type: typeof EXPIRY_TOKEN_DELETE_SUCCESS;
+}
+
+export interface ExpiryTokenDeleteRequest {
+  type: typeof EXPIRY_TOKEN_DELETE_REQUEST;
+}
+
+export interface ExpiryTokenDeleteFailure {
+  type: typeof EXPIRY_TOKEN_DELETE_FAILURE;
+}
+
+export interface AccessTokenCreateRequest {
+  type: typeof ACCESS_TOKEN_CREATE_REQUEST;
+}
+
+export interface AccessTokenCreateSuccess {
+  type: typeof ACCESS_TOKEN_CREATE_SUCCESS;
+}
+
+export interface AccessTokenCreateFailure {
+  type: typeof ACCESS_TOKEN_CREATE_FAILURE;
+}
+
 export interface AccessTokenDeleteRequestAction {
   type: typeof ACCESS_TOKEN_DELETE_REQUEST;
 }
