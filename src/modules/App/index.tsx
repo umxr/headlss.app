@@ -26,6 +26,8 @@ import {
   showErrorNotification,
   showSuccessNotification,
 } from "../../reducers/notification/actions";
+import {CHECKOUT_CUSTOMER_DISASSOCIATE_V2} from "./mutations/checkoutCustomerDisassociateV2";
+import {CUSTOMER_ACCESS_TOKEN_DELETE} from "./mutations/customerAccessTokenDelete";
 
 interface State {
   customer: ICustomerContext;
@@ -148,20 +150,7 @@ class App extends Component<Props, State> {
         );
         apolloClient
           .mutate({
-            mutation: gql`
-              mutation checkoutCustomerDisassociateV2($checkoutId: ID!) {
-                checkoutCustomerDisassociateV2(checkoutId: $checkoutId) {
-                  checkout {
-                    id
-                  }
-                  checkoutUserErrors {
-                    code
-                    field
-                    message
-                  }
-                }
-              }
-            `,
+            mutation: CHECKOUT_CUSTOMER_DISASSOCIATE_V2,
             variables: { checkoutId },
           })
           .then(({ data }) => {
@@ -172,20 +161,7 @@ class App extends Component<Props, State> {
               if (customerAccessToken) {
                 apolloClient
                   .mutate({
-                    mutation: gql`
-                      mutation customerAccessTokenDelete(
-                        $customerAccessToken: String!
-                      ) {
-                        customerAccessTokenDelete(
-                          customerAccessToken: $customerAccessToken
-                        ) {
-                          userErrors {
-                            field
-                            message
-                          }
-                        }
-                      }
-                    `,
+                    mutation: CUSTOMER_ACCESS_TOKEN_DELETE,
                     variables: { customerAccessToken },
                   })
                   .catch((error) => {
