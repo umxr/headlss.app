@@ -1,4 +1,4 @@
-import { RootState as State } from "../../config/redux/createRootReducer";
+import { State } from "../../config/redux/types";
 
 export const getAccessToken = (state: State) =>
   state.customer.customerAccessToken;

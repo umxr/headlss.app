@@ -1,19 +1,19 @@
 import React, { Fragment, useEffect, useCallback } from "react";
 import { useToast } from "@chakra-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../config/redux/createRootReducer";
 import {
   hideErrorNotification,
   hideSuccessNotification,
   hideWarningNotification,
 } from "../../reducers/notification/actions";
 import { Types } from "../../reducers/notification/types";
+import { State } from "../../config/redux/types";
 
 const Notification = () => {
   const toast = useToast();
   const dispatch = useDispatch();
 
-  const notification = useSelector((state: RootState) => state.notification);
+  const notification = useSelector((state: State) => state.notification);
 
   const closeSuccessNotification = useCallback(() => {
     dispatch(hideSuccessNotification());

@@ -16,10 +16,10 @@ import {
 import { SlideProps } from "@chakra-ui/transition";
 import { StoreContext } from "../../config/context/createStoreContext";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../config/redux/createRootReducer";
 import { closeDrawer, toggleDrawer } from "../../reducers/drawer/actions";
 import DrawerItems from "./components/DrawerItems";
 import { linkResolver, Templates } from "../../utils/linkResolver";
+import {State} from "../../config/redux/types";
 
 interface Props {
   placement: SlideProps["placement"];
@@ -28,7 +28,7 @@ interface Props {
 
 const Drawer = ({ placement = "right", title }: Props) => {
   const dispatch = useDispatch();
-  const isOpen = useSelector((state: RootState) => state.drawer.isOpen);
+  const isOpen = useSelector((state: State) => state.drawer.isOpen);
 
   const onClose = () => dispatch(closeDrawer());
   const onToggle = () => dispatch(toggleDrawer());

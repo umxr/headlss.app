@@ -384,9 +384,9 @@ class App extends Component<Props, State> {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     // Make sure we have a Shopify checkout created for cart management.
-    this.initializeCheckout();
+    await this.initializeCheckout();
     this.initializeCustomer();
   }
 

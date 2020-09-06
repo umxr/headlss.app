@@ -1,5 +1,3 @@
-import { REDUCERS, RootState } from "./createRootReducer";
-
 import { State as DrawerState } from "../../reducers/drawer/types";
 import { State as NavigationState } from "../../reducers/navigation/types";
 import { State as CustomerState } from "../../reducers/customer/types";
@@ -40,6 +38,7 @@ export const loadCheckoutId = () => {
   }
 };
 
+// TODO: Move this into a middleware for extra security
 export const loadState = (): {
   notification: NotificationState;
   navigation: NavigationState;
@@ -50,6 +49,11 @@ export const loadState = (): {
     notification: NotifcationDefaultState,
     navigation: NavigationInitialState,
     drawer: DrawerInitialState,
-    customer: CustomerInitialState,
+    customer: {
+      ...CustomerInitialState,
+      expiry: loadCustomerExpiry(),
+      customerAccessToken: loadCustomerToken(),
+      authenticated: !!loadCustomerToken(),
+    },
   };
 };

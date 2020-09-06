@@ -1,3 +1,4 @@
+import { Dispatch } from "redux";
 import {
   AccessTokenDeleteSuccessAction,
   AccessTokenUpdateAction,
@@ -19,6 +20,8 @@ import {
   EXPIRY_TOKEN_VALIDATE,
   UNAUTHENTICATED_SUCCESS,
 } from "./actionTypes";
+import { Action } from "../../config/redux/types";
+import {GetState} from "../../config/redux/createRootReducer";
 
 export const authenticatedSuccess = (): AuthenticatedSuccess => {
   return {
@@ -84,6 +87,13 @@ export const expiryTokenUpdate = (expiryToken: string) => {
       expiryToken,
     },
   };
+};
+
+export const customerDestoryThunk = () => async (
+  dispatch: Dispatch<Action>,
+  getState: GetState
+) => {
+
 };
 
 export const customerDestroySuccess = (): CustomerDestroySuccessAction => {

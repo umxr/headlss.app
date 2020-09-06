@@ -5,7 +5,12 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import rootReducer from "./createRootReducer";
 import preloadedState from "./preloadedState";
 
-const middleware = [thunk];
+import customerMiddleware from "../../reducers/customer/middleware";
+
+const middleware: any[] = [];
+
+middleware.push(thunk);
+middleware.push(customerMiddleware())
 
 export default () =>
   createStore(

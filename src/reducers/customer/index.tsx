@@ -12,17 +12,21 @@ export default function customer(state: State = INITIAL_STATE, action: Action) {
     case A.UNAUTHENTICATED_SUCCESS:
       return {
         ...state,
+        customerAccessToken: null,
+        expiry: null,
         authenticated: false,
       };
     case A.ACCESS_TOKEN_CREATE_SUCCESS:
       return {
         ...state,
         customerAccessToken: action.payload.customerAccessToken,
+        authenticated: true,
       };
     case A.ACCESS_TOKEN_DELETE_SUCCESS:
       return {
         ...state,
         customerAccessToken: null,
+        authenticated: false,
       };
     case A.EXPIRY_TOKEN_CREATE_SUCCESS:
       return {
